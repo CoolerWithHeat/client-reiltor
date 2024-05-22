@@ -1,0 +1,97 @@
+:root{
+    --white:#fff;
+    --color1:#fe8605;
+    --color2:#f51c1c;
+}
+.demo{ background-color: #FBFBFB; }
+.counter{
+    color: var(--color2);
+    background: linear-gradient(45deg,var(--color1),var(--color2));
+    font-family: 'Muli', sans-serif;
+    text-align: center;
+    width: 200px;
+    height: 200px;
+    padding: 70px 25px 10px;
+    margin: 0 auto;
+    box-shadow: 0 10px 6px -3px rgba(0, 0, 0, 0.2);
+    border-radius: 100px 0;
+    position: relative;
+    z-index: 1;
+    transition: all 0.3s;
+}
+.counter:before{
+    content: '';
+    background: var(--white);
+    border-radius: 100% 100%;
+    position: absolute;
+    left: 8px;
+    right: 8px;
+    top: 8px;
+    bottom: 8px;
+    z-index: -1;
+}
+.counter .counter-icon{
+    color:var(--white);
+    background: linear-gradient(45deg,var(--color1),var(--color2));
+    font-size: 30px;
+    width: 50px;
+    height: 50px;
+    line-height: 50px;
+    border-radius: 0 0 50px 50px;
+    position: absolute;
+    top: -8px;
+    right: 8px;
+    box-shadow: 0 0 6px rgba(0, 0, 0, 0.4);
+}
+.counter .counter-icon i.fa{
+    transform: rotateY(0deg);
+    transition: all 0.3s ease 0s;
+}
+.counter:hover .counter-icon i.fa{ transform: rotateY(360deg); }
+.counter .counter-icon:before{
+    content: "";
+    background: linear-gradient(to top left, var(--color1) 49%, transparent 50%);
+    width: 8px;
+    height: 8px;
+    position: absolute;
+    top: 0px;
+    left: -8px;
+}
+.counter h3{
+    font-size: 17px;
+    font-weight: 600;
+    text-transform: uppercase;
+    margin: 0 0 5px;
+}
+.counter .counter-value{
+    font-size: 30px;
+    font-weight: 600;
+    display: block;
+}
+.counter.green{
+    --color1:#76c433;
+    --color2:#2bd4c6;
+}
+.counter.purple{
+    --color1:#ad5389;
+    --color2:#3c1053;
+}
+.counter.blue{
+    --color1:#52E5E7;
+    --color2:#2967c4;
+}
+@media screen and (max-width:990px){
+    .counter{ margin-bottom: 40px; }
+}
+
+#StatHolder{
+    width: 100%;
+    height: 500px;
+    display: flex;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+}
+
+.childStat{
+    margin-top: 30px;
+}

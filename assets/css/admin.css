@@ -1,0 +1,229 @@
+
+
+@media (max-width:460px){
+    #NumbersWindow{
+        width: 90%;
+        height: 300px;
+        display: block; 
+        margin: auto;
+        overflow-x: hidden;
+        overflow-y: scroll;
+    }
+    
+    #textingWindow{
+        width: 90%;
+        height: 300px;
+        display: block; 
+        margin: auto;
+    }
+    #AnnouncementImageDemo{
+        width: 365px;
+        max-height: 460px;
+        overflow-x: scroll;
+        overflow-y: scroll;
+        display: flex;
+        justify-content: left;
+        flex-wrap: wrap;
+    }
+    #BothHolder{
+        width: 90%;
+        height: 100%;
+        display: block;
+        margin: auto;
+    }
+    #OptionPanel{
+        width: 100%;
+        display: flex;
+        justify-content: left;
+        border-bottom: solid;
+        border-width: 1px;
+        border-color: rgb(255, 157, 100);
+        flex-wrap: wrap;
+    }
+    #OptionPanel div{
+        margin-top: 12px;
+        display: flex;
+        justify-content: left;
+        margin-left: 7px;
+    }
+    #OptionInside{
+        width: 100%;
+        height: 700px;
+    }
+}
+@media (min-width:460px){
+    #NumbersWindow{
+        width: 75%;
+        height: 300px;
+        display: block; 
+        margin: auto;
+        overflow-x: hidden;
+        overflow-y: scroll;
+    }
+    
+    #textingWindow{
+        width: 75%;
+        height: 300px;
+        display: block; 
+        margin: auto;
+    }
+    #AnnouncementImageDemo{
+        width: 600px;
+        max-height: 460px;
+        overflow-x: scroll;
+        overflow-y: scroll;
+        display: flex;
+        justify-content: left;
+        flex-wrap: wrap;
+    }
+    
+    #BothHolder{
+        width: 90%;
+        height: 100%;
+        display: flex;
+        justify-content: left;
+        margin-left: 3%;
+    }
+    #OptionPanel{
+        width: auto;
+        height: 700px;
+    }
+    #OptionPanel div{
+        margin-top: 12px;
+        width: 100%;
+        display: flex;
+        justify-content: left;
+    }
+    #OptionInside{
+        width: 100%;
+        height: 700px;
+    }
+}
+
+#MortgageANDtorets{
+    width: 100%;
+    height: 80px;
+    display: flex;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+}
+
+#torets{
+    width: 50%;
+    height: 75px;
+    display: flex;
+    justify-content: space-evenly;
+}
+
+#mortgage{
+    width: 50%;
+    height: 75px;
+    display: flex;
+    justify-content: space-evenly;
+}
+
+#toretsLeft{
+    width: 50%;
+    height: 75px;
+    margin-top: 2px;
+}
+#toretsRight{
+    width: 50%;
+    height: 75px;
+}
+#mortgageLeft{
+    width: 50%;
+    height: 75px;
+}
+#mortgageRight{
+    width: 50%;
+    height: 75px;
+}
+
+#saveButtonboundary{
+    height: 100px;
+    background-color: blue;
+    width: 125px;
+    border-style: solid;
+}
+
+#AddbuttonWindow{
+    position: fixed;
+    right: 35px;
+    bottom: 35px;
+}
+
+.resultImage{
+    width: 280px;
+    height: 200px;
+    padding: 2%;
+    border-radius: 12px;
+}
+
+.RemoveImageCross{
+    width: 280px;
+}
+
+.ImageCross{
+    float: right;
+    margin-top: 12px;
+    cursor: pointer;
+}
+
+#ErrorWindow{
+    width: 90%;
+    position: fixed;
+    top: 20px;
+    margin: auto;
+    display: flex;
+    justify-content: right;
+}
+
+#SuccessWindow{
+    width: 90%;
+    position: fixed;
+    top: 20px;
+    margin: auto;
+    display: flex;
+    justify-content: right;
+}
+
+#NumberDemonstration{
+    border-width: 1px;
+    display: flex;
+    justify-content: space-between;
+}
+
+
+#AnnouncementFilters{
+    display: flex;
+    justify-content: left;
+    width: 330px;
+    margin-top: 15px;
+}
+
+#AdminFilterChild1{
+    width: 40%;
+    height: 50px;
+    display: flex;
+    justify-content: space-evenly;
+}
+
+#AdminFilterChild2{
+    width: 50%;
+    height: 50px;
+    margin-left: 1px;
+}   
+
+
+.filter1Child{
+    width: 20%;
+    height: 50px;
+    margin-right: 10px;
+}
+
+.filter2Child{
+    width: 30%;
+    height: 50px;
+    margin-right: 10px;
+}

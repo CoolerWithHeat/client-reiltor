@@ -1,0 +1,1217 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Kvartir.uz - Admin</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="" name="Admin of Kvartir.uz">
+    <meta content="" name="Kvartir.uz - Admin">
+
+    <!-- Favicon -->
+    <link href="img/icon-deal.png" rel="icon">
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600&family=Inter:wght@700;800&display=swap" rel="stylesheet">
+    
+    <!-- Icon Font Stylesheet -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Libraries Stylesheet -->
+    <link href="lib/animate/animate.min.css" rel="stylesheet">
+    <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/css/custom_main.css" rel="stylesheet">
+    <link href="/assets/css/admin.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container-xxl bg-white p-0">
+        <div class="container-fluid bg-white mb-0 wow fadeIn" data-wow-delay="0.1s">
+            <div style="margin-top: 5px;">
+                <nav class="navbar navbar-expand-lg bg-white py-0 px-0">
+                    <div id="BrandSpace">
+                        <div id="brandDiv1">
+                            <a href="">                    
+                                <img class="img-fluid" src="/img/icon-deal.png" alt="Icon" style="width: 25px; height: 25px;">
+                            </a>
+                        </div>
+                        <div id="brandDiv2">
+                            <a href="../../">
+                                <h2 class="text-primary" id="BrandName">Kvartir.uz</h2>
+                            </a>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+        </div>
+        <div id="BothHolder">
+            <!-- <div id="NumberDemonstration">
+                <div for="formGroupExampleInput2" class="form-label">+998 99 045 1768</div>
+                <div for="formGroupExampleInput1" class="form-label">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="red" class="bi bi-trash-fill" viewBox="0 0 16 16">
+                        <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5M8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5m3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0"/>
+                    </svg>
+                </div>
+            </div> -->
+            <!-- <div id="NumberDemonstration">
+                <label for="formGroupExampleInput2" class="form-label">+998 99 045 1768</label>
+            </div> -->
+            <div id="OptionPanel">
+                <div>
+                    <button id="AnnouncementButton" onclick="SelectTab(event);" data-index="1" class="btn btn-outline-dark">Объявление</button>
+                </div>
+                <div>
+                    <button id="ClientButton" onclick="SelectTab(event);" data-index="3" type="button" class="btn btn-outline-dark">Клиенты</button>
+                </div>
+                <div>
+                    <button id="RealtorButton" onclick="SelectTab(event);" data-index="2" type="button" class="btn btn-outline-dark">Риэлтор</button>
+                </div>
+                <div>
+                    <button id="StatsButton" onclick="SelectTab(event);" data-index="4" type="button" class="btn btn-outline-dark">Статистика</button>
+                </div>
+            </div>
+            <div id="OptionInside">
+                <div id="AnnouncementFilters"></div>
+                <div id="InsideWindow" class="container mt-2"></div>
+            </div>
+            <div id="AddbuttonWindow"></div>
+            <div id="ErrorWindow"></div>
+            <div id="SuccessWindow"></div>
+        </div>
+    </div>
+</body> 
+
+<script>
+    
+    const admin_token = localStorage.getItem('uzkvartir-token') || null;
+    let other_images = [];
+    var retrieved_announcements = [];
+    const buttoon_ids = ['AnnouncementButton', 'RealtorButton', 'ClientButton',  'StatsButton'];
+    let currentFilters = {};
+    let onfocus = null;
+    const host = window.location.protocol + "//" + window.location.host + '/serverdestination/'
+    const makeOptions = (data)=>{
+        if (isObject(data)) {
+            const status = data.options.map(each => `<option ${each === data.selected ? 'selected' : ''} value="${each}">${each}</option>`);
+            return status.join('');
+        }
+        return []
+    };
+    
+
+    function isObject(data) {
+        return typeof data === 'object' && data !== null;
+    }
+
+    function getThumbnailFile() {
+        const input = document.getElementById("id_thumbnail");
+        if (input && input.files && input.files.length > 0) {
+            return input.files[0];
+        } else {
+            return null;
+        }
+    }
+
+
+    const validateData = (userData)=>{
+        const {
+            price,
+            description,
+            square_meters,
+            room_count,
+            landmark,
+            floor_data_1,
+            floor_data_2,
+            floor_data_3,
+            thumbnail
+        } = userData;
+
+        if (
+            price !== null &&
+            description !== null &&
+            square_meters !== null &&
+            room_count !== null &&
+            landmark !== null &&
+            floor_data_1 !== null &&
+            floor_data_2 !== null &&
+            floor_data_3 !== null &&
+            thumbnail !== null
+        ) {
+            return userData;
+        } else {
+            return false;
+        }
+    };
+
+    function RetrieveEnteredData() {
+
+        const getValue = (id) => {
+            const element = document.getElementById(id);
+            return element && element.value ? element.value : null;
+        };
+
+        const getChecked = (id) => {
+            const element = document.getElementById(id);
+            return element && element.checked ? true : false;
+        };
+
+        const getSelectedValue = (id) => {
+            const element = document.getElementById(id);
+            return element && element.value ? element.value : null;
+        };
+
+        const price = getValue('id_price');
+        const description = getValue('id_description');
+        const square_meters = getValue('id_square_meters');
+        const room_count = getValue('id_room_count');
+        const kitchen_size = getValue('id_kitchen_size');
+        const landmark = getValue('id_landmark');
+
+        const mortgage_deal_possible = getChecked('id_mortgage');
+        const located_at_edge = getChecked('id_torets');
+
+        const announcement_type = getSelectedValue('id_announcement_type');
+        const apartment_region = getSelectedValue('id_apartment_region');
+        const bathroom = getSelectedValue('id_bathroom');
+        const construction_material = getSelectedValue('id_construction_material');
+        const kvartal = getSelectedValue('id_kvartal');
+        const room_layout = getSelectedValue('id_room_layout');
+
+        const floorData1Input = getValue('id_floor_1');
+        const floorData2Input = getValue('id_floor_2');
+        const floorData3Input = getValue('id_floor_3');
+
+        const values = {
+            price,
+            description,
+            square_meters,
+            room_count,
+            kitchen_size,
+            landmark,
+            mortgage_deal_possible,
+            located_at_edge,
+            announcement_type,
+            apartment_region,
+            bathroom,
+            construction_material,
+            kvartal,
+            room_layout,
+            floor: {
+                "building_total_floor": floorData1Input,
+                "apartment_floor": floorData2Input,
+                "apartment_room_count": floorData3Input,
+            },  
+        };
+
+        console.log(values)
+        return values;
+    }
+
+
+    function getChilanzarSections() {
+        let indexedValue = {};
+        let dataList = [];
+        let additionalOnes = ['Наккошлик', 'Думбрабод', 'Квартал Г9а', 'Квартал Ц', 'Квартал Е', 'Квартал И'];
+        for (let i = 1; i <= 32 + additionalOnes.length; i++) {
+            if (i <= 31) {
+                let prefix = (26 < i && i <= 31) ? "(Алгоритм)" : '';
+                let data = `${i}-Квартал${prefix ? ` ${prefix}` : ''}`;
+                dataList.push(data);
+                indexedValue[data] = i;
+            } else {
+                let secondaryIndex = i - 32;
+                let data = additionalOnes[secondaryIndex];
+                if (data)
+                    dataList.push(data);
+                    indexedValue[data] = i;
+            }
+        }
+        return { indexedValue, dataList };
+    }
+
+    function removeFileAtIndex(indexToRemove) {
+        if (indexToRemove >= 0 && indexToRemove < other_images.length) {
+            other_images.splice(indexToRemove, 1);
+            return indexToRemove;
+        } else {
+            return false;
+        }
+    }
+
+    const MakeImages = (data)=>{
+        if (Array.isArray(data)){
+            const processedData = data.map(each_url=>`<option value="1">${each_url.file}</option>`);
+            const imageDemos = data.map(each_url=>`<img src="${each_url.file}" class="resultImage">`);
+            return [processedData.join(''), imageDemos.join('')];
+        }
+    }
+
+    function getAnnouncementFields(formData={}){
+        const price = formData.price || '';
+        const description = formData.description || 'нет описания';
+        const square_meters = formData.square_meters || '';
+        const floor_data_1 = formData.floor ? formData.floor.building_total_floor : '';
+        const floor_data_2 = formData.floor ? formData.floor.apartment_floor : '';
+        const floor_data_3 = formData.floor ? formData.floor.apartment_room_count : '';
+        const room_count = formData.room_count || '';
+        const kitchen_size = formData.kitchen_size || '';
+        const landmark = formData.landmark || '';
+        const mortgage_deal_poosible = formData.mortage || false;
+        const located_at_edge = formData.torets || false;
+        const announcementOptions = isObject(formData.announcementOptions) ? makeOptions(formData.announcementOptions) : null;
+        const regionOptions = isObject(formData.regionOptions) ? makeOptions(formData.regionOptions) : null;
+        const sanuzelOptions = isObject(formData.sanuzelOptions) ? makeOptions(formData.sanuzelOptions) : null;
+        const materialOptions = isObject(formData.materialOptions) ? makeOptions(formData.materialOptions) : null;
+        const kvartalOptions = isObject(formData.kvartalOptions) ? makeOptions(formData.kvartalOptions) : null;
+        const roomStructureOptions = isObject(formData.roomStructureOptions) ? makeOptions(formData.roomStructureOptions) : null;
+        const thumbnail = formData.thumbnail ? formData.thumbnail : '';
+        const images = formData.images ? MakeImages(formData.images) : '';
+        let formHTML = `
+            <div>
+                ${price === '' ? `<h2>Новое объявление</h2>` : ''}
+                <br>
+                <div style="width:80px; float:right; "">
+                    <br>
+                    ${price === '' ? '' : 
+                    `<button onclick="DeleteAnnouncement();" style="margin-top:-50px;" onclick="SaveAnnouncement();" type="button" class="btn btn-danger">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
+                            <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5M8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5m3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0"/>
+                        </svg>
+                    </button>`
+                }
+                </div>
+            </div>
+        `;
+                
+        // Price
+        formHTML += `
+            <div class="form-group row">
+                <label for="id_price" class="col-sm-3 col-form-label">Цена</label>
+                <div class="col-sm-9">
+                    <input type="number" step="0.01" min="0" id="id_price" name="price" class="form-control" value="${price}" required>
+                </div>
+            </div>
+            <br>
+        `;
+
+        // Thumbnail
+        formHTML += `
+            <div class="form-group row">
+                <label for="id_thumbnail" class="col-sm-3 col-form-label">Миниатюра</label>
+                <div class="col-sm-9">
+                    <input type="file" id="id_thumbnail" name="thumbnail" class="form-control-file" required>
+                </div>
+            </div>
+            <br>
+        `;
+
+        // Description
+        formHTML += `
+            <div class="form-group row">
+                <label for="id_description" class="col-sm-3 col-form-label">Описание</label>
+                <div class="col-sm-9">
+                    <textarea id="id_description" name="description" class="form-control" rows="4" required>${description}</textarea>
+                </div>
+            </div>
+            <br>
+        `;
+
+        // Images
+        formHTML += `
+            <div class="form-group row">
+                <label class="col-sm-3 col-form-label">загрузить изображений</label>
+                <div class="col-sm-9">
+                    <div class="form-group">
+                        <input type="file" class="form-control-file" id="imageFiles" name="imageFiles" multiple accept="image/*">
+                    </div>
+                    <!-- <button type="submit" class="btn btn-primary">Upload</button> -->
+                    <br>
+                    <!-- Multi-select box for images -->
+                    <select multiple class="form-control" id="id_images" name="images" id="AnnouncementImageDemo">
+                        ${images ? images[0] : ''}
+                    </select>
+                    <div id="AnnouncementImageDemo">
+                        ${images ? images[1] : ''}
+                    </div>
+                </div>
+                ${(images[0] && images[1]) ? '<button onclick="ClearAllImages(event);" style="color:white" class="btn btn-primary">Удалить все изображения</button>' : ''}
+            </div>
+            <br>
+        `;
+
+        // Square Meters
+        formHTML += `
+            <div class="form-group row">
+                <label for="id_square_meters" class="col-sm-3 col-form-label">общий площадь м²</label>
+                <div class="col-sm-9">
+                    <input type="number" step="0.01" min="0" id="id_square_meters" name="square_meters" class="form-control" value="${square_meters}" required>
+                </div>
+            </div>
+            <br>
+        `;
+
+        // Region
+        formHTML += `
+            <div class="form-group row">
+                <label for="id_apartment_region" class="col-sm-3 col-form-label">Район</label>
+                <div class="col-sm-9">
+                    <select id="id_apartment_region" name="apartment_region" class="form-control" required>
+                        <!-- Other options -->
+                        ${regionOptions}
+                    </select>
+                </div>
+            </div>
+            <br>
+        `;
+
+        // Announcement Type
+        formHTML += `
+            <div class="form-group row">
+                <label for="id_announcement_type" class="col-sm-3 col-form-label">Объявление</label>
+                <div class="col-sm-9">
+                    <select id="id_announcement_type" name="announcement_type" class="form-control" required>
+                        ${announcementOptions}
+                    </select>
+                </div>
+            </div>
+            <br>
+        `;
+
+
+        formHTML += `
+            <div class="form-group row">
+                <label for="id_floor" class="col-sm-9 col-form-label">Этаж</label>
+                <div class="col-sm-9">
+                    <input data-id="3" oninput="UpdateStorey(event);" type="text" id="id_floor_1" name="floor" placeholder="Этажность здания" class="form-control" value="${floor_data_1}">
+                </div>
+                <div class="col-sm-9">
+                    <input data-id="2" oninput="UpdateStorey(event);" type="text" id="id_floor_2" name="floor" placeholder="Этаж квартиры" class="form-control" value="${floor_data_2}">
+                </div>
+                <div class="col-sm-9">
+                    <input data-id="1" oninput="UpdateStorey(event);" type="text" id="id_floor_3" name="floor" placeholder="количество комнаты в квартире" class="form-control" value="${floor_data_3}">
+                </div>
+            </div>
+            <br>
+            <div style="width:75px; height:25px; float:right; display:flex; justify-content:right;">
+                <div id="storey_1">${floor_data_3 ? `${floor_data_3}/` : ' '}</div>
+                <div id="storey_2">${floor_data_2 ? `${floor_data_2}/` : ' '}</div>
+                <div id="storey_3">${floor_data_1 ? `${floor_data_1}/` : ' '}</div>
+            </div>
+            <br>
+        `;
+
+        // Bathroom
+        formHTML += `
+            <div class="form-group row">
+                <label for="id_bathroom" class="col-sm-3 col-form-label">Санузел</label>
+                <div class="col-sm-9">
+                    <select id="id_bathroom" name="bathroom" class="form-control" required>
+                        ${sanuzelOptions}
+                        <!-- Other options -->
+                    </select>
+                </div>
+            </div>
+            <br>
+        `;
+
+        // Kitchen Size
+        formHTML += `
+            <div class="form-group row">
+                <label for="id_kitchen_size" class="col-sm-3 col-form-label">Кухня м²</label>
+                <div class="col-sm-9">
+                    <input type="text" id="id_kitchen_size" name="kitchen_size" class="form-control" value="${kitchen_size}">
+                </div>
+            </div>
+            <br>
+        `;
+
+        // Room Count
+        formHTML += `
+            <div class="form-group row">
+                <label for="id_room_count" class="col-sm-3 col-form-label">Количество комнат</label>
+                <div class="col-sm-9">
+                    <input type="number" id="id_room_count" name="room_count" class="form-control" value="${room_count}" required>
+                </div>
+            </div>
+            <br>
+        `;
+
+        // Construction Material
+        formHTML += `
+            <div class="form-group row">
+                <label for="id_construction_material" class="col-sm-3 col-form-label">Материал квартиры</label>
+                <div class="col-sm-9">
+                    <select id="id_construction_material" name="construction_material" class="form-control" required>
+                        ${materialOptions}
+                        <!-- Other options -->
+                    </select>
+                </div>
+            </div>
+            <br>
+        `;
+
+        // Kvartal
+        formHTML += `
+            <div class="form-group row">
+                <label for="id_kvartal" class="col-sm-3 col-form-label">Квартал</label>
+                <div class="col-sm-9">
+                    <select id="id_kvartal" name="kvartal" class="form-control" required>
+                        ${kvartalOptions}
+                    </select>
+                </div>
+            </div>
+            <br>
+        `;
+
+        // Landmark
+        formHTML += `
+            <div class="form-group row">
+                <label for="id_landmark" class="col-sm-3 col-form-label">Ориентир</label>
+                <div class="col-sm-9">
+                    <input type="text" id="id_landmark" name="landmark" class="form-control" value="${landmark}" required>
+                </div>
+            </div>
+            <br>
+        `;
+
+        // Room Layout
+        formHTML += `
+            <div class="form-group row">
+                <label for="id_room_layout" class="col-sm-3 col-form-label">Планировка</label>
+                <div class="col-sm-9">
+                    <select id="id_room_layout" name="room_layout" class="form-control" required>
+                        <!-- Other options -->
+                        ${roomStructureOptions}
+                    </select>
+                </div>
+            </div>
+            <br>
+        `;
+
+        formHTML += `
+            <div id="MortgageANDtorets">
+                <div id="mortgage">
+                    <div id="mortgageLeft">Ипотека</div>
+                    <div id="mortgageRight"><input class="form-check-input" type="checkbox" id="id_mortgage" ${mortgage_deal_poosible ? 'checked' : ''} style="width: 20px; height: 20px;"></div>
+                </div>
+                <div id="torets">
+                    <div id="toretsLeft">Торец</div>
+                    <div id="toretsRight"><input class="form-check-input" id="id_torets" ${located_at_edge ? 'checked' : ''} type="checkbox" style="width: 20px; height: 20px;"></div>
+                </div>
+            </div>
+            <br>
+        `;
+
+        formHTML += `
+            <div style="width:80px; height:100px; float:right;"">
+                <button style="color:white;" onclick="SaveAnnouncement();" type="button" class="btn btn-primary">Сохранять</button>
+            </div>
+        `;
+        return formHTML
+    }
+
+    const UpdateStorey = (event)=>{
+        const coming_from_id = event.target ? event.target.getAttribute('data-id') : null;
+        const field_ids = [1, 2, 3];
+        if (coming_from_id){
+            const right_place = document.getElementById(`storey_${coming_from_id}`);
+            const inputted_data = event.target.value; 
+            right_place.innerHTML = `${inputted_data}/`
+        }
+    };
+    
+    const apartmentType = [
+        'продается',
+        'в аренду',
+    ];
+
+    let regions;;
+
+    const bathroomOptions = [
+        'Раздельный',
+        'Совмещенный',
+    ];
+
+    const roomLayoutOptions = [
+        'Раздельное',
+        'Cмежные',
+        'Cмежные-раздельные',
+    ];
+
+    const constructionMaterialsOptions = [
+        'Кирпичный',
+        'Панельный',
+        'Монолитный',
+    ];
+
+    const SaveRealtor = ()=>{
+        const data_1 = document.getElementById('realtorName');
+        const data_2 = document.getElementById('realtorNumber');
+        const realtor_name = data_1 ? data_1.value : null;
+        const realtor_number = data_2 ? data_2.value : null;
+        if (realtor_name && realtor_number)
+            showLoading(true);
+            MakeRequest('handleRealtorContact/', {realtor_name, realtor_number}, "POST", (response)=>{
+                if (response){
+                    setTimeout(() => {
+                        HandleReiltorInformation(response);
+                        showSuccess('Всё!');
+                    }, 499);
+                }else{
+                    showError('Error Happened !')
+                }
+            })
+    };
+
+    const HandleReiltorInformation = (data={})=>{
+        const window = document.getElementById('InsideWindow');
+        const realtor_phone = data.main_reiltor_number || '';
+        const realtor_name = data.reiltor_name || '';
+        const realtor_form = `
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6">
+                            <div class="form-group row">
+                                <label for="realtorName" class="col-sm-4 col-form-label">Имя риэлтора:</label>
+                                <div class="col-sm-8">
+                                    <input type="text" ${realtor_name ? `value=${realtor_name}` : ''} class="form-control" id="realtorName" placeholder="Enter Realtor Name">
+                                </div>
+                            </div>
+                            <br>
+                            <div class="form-group row">
+                                <label for="realtorNumber" class="col-sm-4 col-form-label">Номер риэлтор:</label>
+                                <div class="col-sm-8">
+                                    <input type="text" ${realtor_phone ? `value=${realtor_phone}` : ''} class="form-control" id="realtorNumber" placeholder="Enter Realtor Number">
+                                </div>
+                            </div>
+
+                    </div>
+                    <button onclick="SaveRealtor();" style="color:white; margin-top:25px" class="btn btn-primary">Сохранять</button>
+                </div>
+            </div>
+        `;
+        window.innerHTML = realtor_form;
+    };
+    
+    const DefaultDemo =  {
+        price:'', 
+        room_count: '',
+        square_meters: 0,
+        description: null,
+        floor: {building_total_floor:'', apartment_floor:'', apartment_room_count:''}, 
+        kitchen_size: '', 
+        landmark: '', 
+        regionOptions:{selected:'Чиланзар', options: regions}, 
+        roomStructureOptions:{selected: 'Смежные-раздельные', options:roomLayoutOptions},
+        announcementOptions: {selected: 'продается', options:apartmentType},
+        sanuzelOptions: {selected: 'Раздельный', options:bathroomOptions},
+        materialOptions: {selected: 'Кирпичный', options:constructionMaterialsOptions},
+        kvartalOptions : {selected: 'Думбрабод', options:getChilanzarSections().dataList},
+        mortage: true,
+        torets: false,
+    }
+
+    const ShowResult = (data = null)=>{
+        const window = document.getElementById('InsideWindow');
+        if (window)
+            window.innerHTML = getAnnouncementFields(data || DefaultDemo);
+            listenToImagefields();
+    };
+
+    apartment_indecies = {1: 'продается', 2 : 'в аренду'};
+    
+    function formatFloat(number) {
+        var parts = number.toString().split(".");
+        parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        if (parts[1] === "00") {
+            return parts[0];
+        }
+        return parts.join(".");
+    }
+
+    const FilterAnnouncements = (provided_data) => {
+        if (isObject(currentFilters)){
+            const filtered_data = provided_data.filter(each=>{
+                if ((currentFilters.ID) && !(currentFilters.ID == 0)){return each.id == currentFilters.ID ? true : false}
+                if (currentFilters.TYPE && !(currentFilters.TYPE == '0')){return each.announcement_type == apartment_indecies[Number(currentFilters.TYPE)] ? true : false}
+                return true
+            });
+            return filtered_data
+        };
+        return provided_data
+    };
+
+    const UpdateAnnouncements = ()=>{
+        showLoading();
+        MakeRequest('AllAnnouncements/', null, "GET", (response)=>{
+            const window = document.getElementById('InsideWindow');
+            retrieved_announcements = response.data;
+            const NoDataMessage = response.data.length ? null : `<div style="margin:auto; margin-top:15px; display:block;">Никаких объявлений!</div> `
+            regions = response.supported_regions;
+            let filteredData = FilterAnnouncements(retrieved_announcements);
+            const listing = filteredData.map(each=>{
+                const kvartal = getChilanzarSections().dataList[each.kvartal-1];
+                const buttonName = `${each.id} || ${each.apartment_region}, ${each.apartment_region == 'Чиланзар' ? kvartal : ''} <--> за $${formatFloat(each.price)}${each.announcement_type=='в аренду' ? '/месяц' : ''}`;
+                return `<button data-id="${each.id}" data-type="announcement" onclick="SelectChoice(event)" style="width: 100%; height: 30px; font-size: 12px; text-align: left; margin-top: 3px;" type="button" class="btn btn-outline-secondary">${buttonName}</button>`
+            }
+        )
+            setTimeout(() => {
+                window.innerHTML = NoDataMessage ? NoDataMessage : listing.join('');
+            }, 499);
+        })
+    };
+
+    const listenToImagefields = () => {
+        const input = document.getElementById("imageFiles");
+        const imagewindow = document.getElementById('AnnouncementImageDemo');
+        const images_panel = document.getElementById("id_images");
+        input.addEventListener("change", function() {
+            const files = input.files;
+            for (let i = 0; i < files.length; i++) {
+                
+                const img = document.createElement('img');
+                img.classList.add('resultImage');
+                img.src = URL.createObjectURL(files[i]);
+                img.width = 100;
+
+                const outerDiv = document.createElement('div');
+                outerDiv.id = `image-${other_images.length}`;
+                const innerDiv = document.createElement('div');
+                outerDiv.classList.add('RemoveImageCross');
+                innerDiv.innerHTML += `
+                    <div data-id='${other_images.length || 0}' class="ImageCross" onclick="removeImage(event);">
+                        <svg id="cross-${other_images.length}" data-id='${other_images.length || 0}' xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="red" class="bi bi-x-circle" viewBox="0 0 16 16">
+                            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                            <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+                        </svg>
+                    </div>
+                `
+                innerDiv.appendChild(img);
+                outerDiv.appendChild(innerDiv);
+                imagewindow.appendChild(outerDiv);
+                const previous_image = document.getElementById(`cross-${other_images.length-1}`);
+                if (previous_image){
+                    previous_image.style.visibility = 'hidden';
+                }
+                other_images.push(files[i]);
+                images_panel.innerHTML += `<option id="history-${other_images.length}" value="1">${files[i].name}</option>`;
+            }
+    });
+};
+
+    const removeImage = (event)=>{
+        const index = event.target ? event.target.getAttribute('data-id') : null;
+        if (index){
+            const image = document.getElementById(`image-${index}`);
+            image.remove();
+            const status = removeFileAtIndex(index);
+            if (status){
+                const previous_image = document.getElementById(`cross-${other_images.length-1}`);
+                const history_log = document.getElementById(`history-${other_images.length+1}`);
+                if (history_log){
+                    history_log.remove();
+                    if(previous_image)
+                        previous_image.style.visibility = 'visible';
+                }
+            }
+        }
+    };
+
+
+    function objectToFormData(obj) {
+        const formData = new FormData();
+        for (const key in obj) {
+            if (obj.hasOwnProperty(key)) {
+            if (typeof obj[key] === 'object' && !Array.isArray(obj[key])) {
+                const nestedFormData = objectToFormData(obj[key]);
+                for (const nestedKey of nestedFormData.keys()) {
+                formData.append(`${key}.${nestedKey}`, nestedFormData.get(nestedKey));
+                }
+            } else if (Array.isArray(obj[key])) {
+                obj[key].forEach((value, index) => {
+                formData.append(`${key}[${index}]`, value);
+                });
+            } else {
+                formData.append(key, obj[key]);
+            }
+            }
+        }
+        return formData;
+    }
+
+
+    function getObjectById(id, array) {
+        try{
+            for (let i = 0; i < array.length; i++) {
+                if (array[i].id === Number(id)) {
+                    return array[i];
+                }
+            }
+            return null;
+            }
+        catch{
+            return null;
+        };
+    };
+
+    async function MakeRequest(pathname, body, type, callback, stringify=true, with_files=false){
+        const constructedUrl = host + pathname;
+        const data = stringify ? body ? JSON.stringify(body) : {} : body;
+        const tokenHeader = {'Authorization': 'Token ' + admin_token}
+        const headers = with_files ? {...tokenHeader} : {...tokenHeader, 'Content-Type': 'application/json'};
+        
+        const request = await fetch(constructedUrl, {
+            method: type,
+            headers: headers,
+            body: type === "POST" ? data : null,
+        });
+
+        if (request.status == 401){
+            window.location.href = '../../login/'
+        }
+
+        if (request.ok){
+            const response = await request.json();
+            callback(response);
+        } else {
+            console.log(request.status);
+            const response = await request.json();
+            console.log(response);
+            callback(null);
+        }
+
+    }
+
+    function debounce(func, wait) {
+        let timeout;
+        return function(...args) {
+            const later = () => {
+                clearTimeout(timeout);
+                func.apply(this, args);
+            };
+            clearTimeout(timeout);
+            timeout = setTimeout(later, wait);
+        };
+    }
+
+    function HandleFilter(event={}){
+        if(event.target){
+            const coming_from = event.target.getAttribute('data-flow')
+            const value  = event.target.value;
+            if (coming_from === 'TYPE'){
+                const data = {'TYPE': value};
+                currentFilters = {...currentFilters, ...data};
+                UpdateAnnouncements();
+            }
+            if (coming_from === 'ID'){
+                const data = {'ID': value};
+                currentFilters = {...currentFilters, ...data};
+                UpdateAnnouncements();
+            }
+        }
+    }
+
+    const WatchoutForFilterValues = (()=>{
+        const type = document.getElementById('announcement_type');
+        const announcement_id_entered = document.getElementById('specific_id_entered');
+        if (type && announcement_id_entered){
+            type.addEventListener('input', debounce(HandleFilter, 333))
+            announcement_id_entered.addEventListener('input', debounce(HandleFilter, 333))
+        };
+    }); 
+
+    const AnnouncementFilters = (enable=true)=>{
+        const FilterWindow = document.getElementById('AnnouncementFilters');
+        const structure = `
+            <div id="AdminFilterChild1">
+                <div class="filter1Child">
+                    <label style="font-size: 23px; float: right;">ID</label>
+                </div>
+                <div class="filter2Child">
+                    <input ${currentFilters.ID ? `value="${currentFilters.ID}"` : ''} data-flow="ID" id="specific_id_entered" style="width: 55px; height: 38px;" type="text">
+                </div>
+            </div>
+            <div id="AdminFilterChild2">
+                <div class="form-group row">
+                    <div class="col-sm-9">
+                        <select data-flow="TYPE" style="height:40px; width:120px" id="announcement_type" name="apartment_region" class="form-control" required>
+                            <option ${currentFilters.TYPE == '0' ? `selected` : ''} value="0">Все</option>
+                            <option ${currentFilters.TYPE == '1' ? `selected` : ''} value="1">Продажа</option>
+                            <option ${currentFilters.TYPE == '3' ? `selected` : ''} value="2">Аренда</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        `
+        if (enable){
+            FilterWindow.innerHTML = structure;
+        }
+        else{
+            FilterWindow.innerHTML = '';
+        }
+
+        setTimeout(() => {
+            WatchoutForFilterValues();
+        }, 333);
+    };
+
+    
+    function SaveAnnouncement() {
+        const enteredData = RetrieveEnteredData();
+        let validData = validateData(enteredData);
+        const thumbnail = getThumbnailFile();
+        const imagesAsExpected = onfocus ? true : thumbnail && other_images.length
+        if (validData && imagesAsExpected) {
+            showLoading(true);
+            var formedData = objectToFormData(validData);
+            other_images.forEach(image => {
+                formedData.append('images', image);
+            });
+            formedData.append('thumbnail', thumbnail);
+            formedData.append('id', onfocus);
+            MakeRequest('createAnnouncement/', formedData, 'POST', (result) => {
+                if (result){
+                    setTimeout(() => {
+                        showLoading(false);
+                        ShowResult(transLateLayer(result));
+                        showSuccess('Всё!');
+                    }, 499);
+                }
+                else{
+                    console.log('error')
+                }
+            }, false, true);
+        }else{
+            showError('минимум цена, миниатюра, изображение, квадратный метр, этаж, количество комнат и ориентир нужный');
+        }
+    }
+
+    const transLateLayer = (data)=>{
+        const kvartal = data.kvartal  ? getChilanzarSections().dataList[Number(data.kvartal)-1] : null;
+        console.log(kvartal)
+        return {
+                price: data.price, 
+                room_count: data.room_count,
+                square_meters: data.square_meters,
+                description: data.description,
+                floor:data.floor, 
+                kitchen_size: data.kitchen_size, 
+                landmark: data.landmark, 
+                regionOptions:{selected:data.apartment_region, options: regions}, 
+                roomStructureOptions:{selected: data.room_layout, options:roomLayoutOptions},
+                announcementOptions: {selected: data.announcement_type, options:apartmentType},
+                sanuzelOptions: {selected: data.bathroom, options:bathroomOptions},
+                materialOptions: {selected: data.construction_material, options:constructionMaterialsOptions},
+                kvartalOptions : {selected: kvartal, options:getChilanzarSections().dataList},
+                mortage: data.mortgage_deal_possible,
+                torets: data.end_wall_structure,
+                images: data.images,
+                thumbnail:data.thumbnail,
+            }
+    };
+
+    
+
+    const SelectChoice = (event)=>{
+        const id = event.target ? event.target.dataset.id : null;
+        const coming_from = event.target ? event.target.dataset.type : null;
+        const selectedData = getObjectById(id, retrieved_announcements);
+        if (selectedData){
+            onfocus = selectedData.id;
+            ShowResult(transLateLayer(selectedData));
+            listenToImagefields();
+        }
+        AnnouncementFilters(false);
+    };
+    
+    const enableAddButton = (enable=true)=>{
+        const window = document.getElementById('AddbuttonWindow');
+        const button = `
+            <svg onclick='ShowAdditionForm(event);' xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="#0d6efd" class="bi bi-plus-circle" viewBox="0 0 16 16">
+                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
+            </svg>
+        `
+        if (enable)
+            window.innerHTML = button;
+        else
+          window.innerHTML = '';
+    };
+
+    const ShowAdditionForm = ()=>{
+        onfocus = false;
+        ShowResult(
+            {
+                price:'', 
+                room_count: '',
+                square_meters: 0,
+                description: null,
+                floor: {building_total_floor:'', apartment_floor:'', apartment_room_count:''}, 
+                kitchen_size: '', 
+                landmark: '', 
+                regionOptions:{selected:'Чиланзар', options: regions}, 
+                roomStructureOptions:{selected: 'Смежные-раздельные', options:roomLayoutOptions},
+                announcementOptions: {selected: 'продается', options:apartmentType},
+                sanuzelOptions: {selected: 'Раздельный', options:bathroomOptions},
+                materialOptions: {selected: 'Кирпичный', options:constructionMaterialsOptions},
+                kvartalOptions : {selected: 'Думбрабод', options:getChilanzarSections().dataList},
+                mortage: true,
+                torets: false,
+            }
+        );
+        enableAddButton(false);
+        AnnouncementFilters(false);
+    };
+    
+    const showLoading = (enable=true)=>{
+        if (enable){
+            const contentWindow = document.getElementById('InsideWindow');
+            if (contentWindow){
+                const loading = `<div id="loadingIcon" style="display:block; margin:auto; margin-top:45%;" class="spinner-border text-secondary" role="status"></div>`;
+                contentWindow.innerHTML = loading;
+            }
+        }else{
+            const loading = document.getElementById('loadingIcon');
+            if (loading){
+                loading.remove();
+            }
+        }
+    };
+
+    const showError = (text, enable=true)=>{
+        const errorWindow = document.getElementById('ErrorWindow');
+        if (text && enable){
+            const structure = `
+                <div style="width:300px; height: auto; font-size: 13px;" class="alert alert-danger" role="alert">
+                    ${text}
+                </div>
+                <svg onclick="showError(false, false);" style="margin-top: -15px;" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-x-circle-fill" viewBox="0 0 16 16">
+                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293z"/>
+                </svg>
+            `
+            errorWindow.innerHTML = structure;
+        }else{
+            errorWindow.innerHTML = '';
+        }
+    };
+
+    const showSuccess = (text, enable=true, remove_afterwards=true)=>{
+        const errorWindow = document.getElementById('SuccessWindow');
+        if (text && enable){
+            const structure = `
+                <div style="width:300px; height: auto; font-size: 13px;" class="alert alert-success" role="alert">
+                    ${text}
+                </div>
+                <svg onclick="showSuccess(false, false);" style="margin-top: -15px;" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-x-circle-fill" viewBox="0 0 16 16">
+                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293z"/>
+                </svg>
+            `
+            errorWindow.innerHTML = structure;
+            if (remove_afterwards){
+                setTimeout(() => {
+                    errorWindow.innerHTML = '';
+                }, 1499);
+            }
+        }else{
+            errorWindow.innerHTML = '';
+        }
+    };
+
+    const ClearAllImages = ()=>{
+        showLoading();
+        event.preventDefault();
+        if (onfocus){
+            MakeRequest('ResetAnnouncementImages/', {id: onfocus}, 'POST', (response)=>{
+                setTimeout(() => {
+                    showLoading(false);
+                    ShowResult(transLateLayer(response));
+                }, 499);
+            })
+        }
+    };
+
+    const SaveNumber = ()=>{
+        const number_field = document.getElementById('numberCreationField');
+        if (number_field){
+            showLoading();
+            const data = {number: number_field.value};
+            MakeRequest('ClientNumbers/', data, "POST", (response)=>{
+                if (response.number){
+                    setTimeout(() => {
+                        open_numbers();
+                    }, 499);
+                }
+            })
+        }
+    };
+
+    const showNumbersform = ()=>{
+        const window = document.getElementById('InsideWindow');
+        const form_structure = `
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                            <div class="col">
+                                <input id="numberCreationField" type="text" class="form-control" value="+998" placeholder="номер телефона клиента">
+                            </div>
+                            <div class="col-auto">
+                                <button onclick="SaveNumber();" style="color: white;" type="submit" class="btn btn-primary">Сохранять</button>
+                            </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        `;
+        window.innerHTML = form_structure;
+    };
+
+    const PurgeClientNumber = (event)=>{
+        const RequestedID = event.target.getAttribute('data-id');
+        if (RequestedID){
+            MakeRequest('purgeNumber/', {id: RequestedID}, "POST", (response)=>{
+                showSuccess('Всё!');
+                open_numbers();
+            })
+        }
+    };
+
+    const SendMessages = ()=>{
+        const messageField = document.getElementById('MessageHolder')
+        if (messageField){
+            const data = messageField.value;
+            if (data){
+                const test_box = document.getElementById('test_checkbox')
+                MakeRequest('sendMessage/', {message:data, test_mode: test_box.checked}, 'POST', (response)=>{showSuccess('Всё!'); open_numbers();})
+            }else{
+                showError('Убедитесь, что в поле «Сообщения» есть данные.')
+            }
+        }
+    };
+
+    function placeNumbersPanel(data=[]){
+        const window = document.getElementById('InsideWindow');
+        if (Array.isArray(data)){
+            const No_Data_Message = !data.length ? 'Пока нет номеров !' : '' ;
+            const numbers = data.map(each=>`
+                <div id="NumberDemonstration">
+                    <div for="formGroupExampleInput2" class="form-label">${each.number}</div>
+                    <div data-id="${each.id}" onclick="PurgeClientNumber(event);" for="formGroupExampleInput1" class="form-label">
+                        <svg data-id="${each.id}" xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="red" class="bi bi-trash-fill" viewBox="0 0 16 16">
+                            <path  data-id="${each.id}" d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5M8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5m3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0"/>
+                        </svg>
+                    </div>
+                </div>`
+            )
+            const MessagingInterface = `
+                <div id="textingWindow">
+                    <br>
+                    <div class="form-group">
+                        <label for="exampleFormControlTextarea1">Сообщение</label>
+                        <textarea id="MessageHolder" class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                    </div>
+                    <br>
+                    <div id="checkboxSite" style="width:250px; height:50px;">
+                        <input class="form-check-input" type="checkbox" id="test_checkbox" style="width: 20px; height: 20px;"> Только тест
+                    </div>
+                    <br>
+                    <button onclick="SendMessages();" style="color: white; float: right;" class="btn btn-primary">Отправлять</button>
+                </div>
+            `
+            const structure = `
+                    <div style="width: 100%; height: auto;">
+                        <div id="NumbersWindow">${numbers.join('')} <h2 class="display-6">${No_Data_Message}</h2></div>
+                        ${No_Data_Message ? '' : MessagingInterface}
+                        <button onclick="showNumbersform();" style="color: white; position: fixed; right: 20px; width: 60px; bottom: 50px;" class="btn btn-secondary">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
+                                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                                <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
+                              </svg>
+                        </button>
+                    </div>
+            `
+        if (window)
+            window.innerHTML = structure;
+        } 
+    };
+
+    const SelectButton = (selected_button)=>{
+        buttoon_ids.forEach(each_id=>{
+            const button = document.getElementById(each_id);
+            if (button === selected_button){
+                button.classList.add('active')
+            }else{button.classList.remove('active')}
+        })
+    };
+
+    const openAnnouncements = ()=>{enableAddButton(); UpdateAnnouncements(); AnnouncementFilters();}
+    
+    const openReiltor = (data=null)=>{AnnouncementFilters(false); showLoading(true);MakeRequest('handleRealtorContact/', null, "GET", (response)=>{if (response){setTimeout(() => {showLoading(false);HandleReiltorInformation(response);}, 499);}})}
+    
+    const open_numbers = ()=>{
+        showLoading()
+        MakeRequest('ClientNumbers/', null, "GET", (response)=>{
+            if (Array.isArray(response))
+                setTimeout(() => {
+                    placeNumbersPanel(response);
+                }, 499);
+        })
+        AnnouncementFilters(false);
+    };
+    
+    const DeleteAnnouncement = ()=>{
+        showLoading();
+        if (onfocus){
+            MakeRequest('purgeAnnouncement/', {'id': onfocus}, "POST", (response)=>{
+                if (response){
+                    setTimeout(() => {
+                        openAnnouncements();
+                    }, 499);
+                }else{
+
+                }
+            })
+        }
+    };
+
+    const open_stats = ()=>{
+        if (admin_token)
+            window.location.href = '../../stats/'
+    }
+
+    function SelectTab(event){
+        const index = event.target ? event.target.getAttribute('data-index') : null;
+        const indexes = {
+            1: openAnnouncements,
+            2: openReiltor,
+            3: open_numbers,
+            4: open_stats,
+        }
+        if (index)
+            indexes[index]();
+            SelectButton(event.target);
+        
+        if (!(index == 1)){
+            enableAddButton(false)
+        }
+    }
+
+    const HandleWindowLoad = ()=>{
+        if (!admin_token){
+            window.location.href = '../../login/';
+        }else{
+            const first_button = document.getElementById(buttoon_ids[0]);
+            setTimeout(() => {
+                first_button.click();
+            }, 299);
+        }
+    };
+
+    HandleWindowLoad();
+
+</script>
+</html>

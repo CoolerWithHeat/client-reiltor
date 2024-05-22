@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>UzKvartir - Tashkent Real Estate</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="" name="keywords">
+    <meta content="" name="description">
+
+    <!-- Favicon -->
+    <link href="img/icon-deal.png" rel="icon">
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600&family=Inter:wght@700;800&display=swap" rel="stylesheet">
+    
+    <!-- Icon Font Stylesheet -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Libraries Stylesheet -->
+    <link href="lib/animate/animate.min.css" rel="stylesheet">
+    <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Template Stylesheet -->
+    <link href="css/style.css" rel="stylesheet">
+    <link href="css/pricefield.css" rel="stylesheet">
+    <link href="css/loadingAnimation.css" rel="stylesheet">
+    <link href="assets/css/custom_main.css" rel="stylesheet">
+</head>
+<!-- property-item rounded overflow-hidden -->
+<body>
+    <div class="container-xxl bg-white p-0">
+        <!-- Spinner Start -->
+        <div id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
+            <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+        </div>
+        <!-- Spinner End -->
+        <div class="container-fluid bg-white mb-0 wow fadeIn" data-wow-delay="0.1s">
+            <div style="margin-top: 5px;">
+                <nav class="navbar navbar-expand-lg bg-white py-0 px-0">
+                    <div id="BrandSpace">
+                        <div id="brandDiv1">
+                            <a href="">                    
+                                <img class="img-fluid" src="/img/icon-deal.png" alt="Icon" style="width: 25px; height: 25px;">
+                            </a>
+                        </div>
+                        <div id="brandDiv2">
+                            <a href="../../">
+                                <h2 class="text-primary" id="BrandName">Kvartir.uz</h2>
+                            </a>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+            <div class="container">
+                <div class="row g-4">
+                    <div id="AllFilterPanel" class="col-md-0 invisible">
+                        <br>
+                        <div id="FilterHolder" class="row g-1"></div>
+                        <br>
+                        <div id="PriceANDStorey"></div>
+                        <ul class="nav nav-pills d-inline-flex justify-content-end">
+                            <li style="display: flex; justify-content: space-evenly;" class="nav-item me-2">
+                                <div id="ButtonFilter1"></div>
+                                <div id="ButtonFilter2" style="margin-left: 5px;"></div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div id="SearchButtonField" class="col-md-2 invisible">
+                        <button onclick="TriggerSearch();" class="btn btn-outline-secondary w-100 py-3">Поиск</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div onclick="EnableFilters(event);" id="ButtonDemonstration">
+            <div id="Iconwindow">
+                <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                    <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+                </svg>
+            </div>
+            <div id="Titlewindow">
+                <p style="padding: 7px; opacity : 0.5" class="text-lowercase">Поиск</p>
+            </div>
+        </div>
+        <!-- Search End -->
+
+        <!-- Property List Start -->
+        <div class="container-xxl py-0">
+            <div class="container">
+                <div class="row g-0 gx-0 align-items-end">
+                    <div class="col-lg-2">
+                        <div class="text-start mx-auto wow slideInLeft" data-wow-delay="0.1s">
+                            <br>
+                            <h1 class="mb-3">Недвижимость</h1>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-content">
+                    <div id="tab-1" class="tab-pane fade show p-0 active">
+                        <div id="product_boundary" class="row g-4"></div>
+                    </div>        
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="lib/wow/wow.min.js"></script>
+    <script src="lib/easing/easing.min.js"></script>
+    <script src="lib/waypoints/waypoints.min.js"></script>
+    <script src="lib/owlcarousel/owl.carousel.min.js"></script>
+
+    <!-- Template Javascript -->
+    <script src="js/main.js"></script>
+    <script src="/js/sockets.js"></script>
+
+    <script>
+        const isObject = (data)=> typeof data === 'object' && data !== null;
+        const host = window.location.protocol + "//" + window.location.host + '/serverdestination/'
+        let phone_number;
+        let kvartalFilterActive = false;
+        let chilanzar_list;
+        let current_search_params;
+        let PreviousParamsRestoration = true;
+        const viewportWidth = window.innerWidth || document.documentElement.clientWidth;
+        const filterWindow = document.getElementById('FilterHolder');
+        const product_window = document.getElementById('product_boundary');
+        const handleCardStyling = (containerDiv)=>{if (viewportWidth > 767){}else{containerDiv.classList.remove('row'); containerDiv.classList.add('myFuckingContainer')}}
+        
+        function CheckIfDigit(event) {
+            var inputElement = event.target;
+            var inputValue = inputElement.value;
+            if (isNaN(inputValue[inputValue.length - 1])) {
+                inputElement.value = inputValue.slice(0, -1);
+            }
+        }
+
+        function getUrlParams() {
+            const searchParams = new URLSearchParams(window.location.search);
+            const params = {};
+            for (const [key, value] of searchParams.entries()) {
+                if (value.includes(',')) {
+                    params[key] = value.split(',');
+                } else {
+                    params[key] = value;
+                }
+            }
+            return params;
+        }
+
+        function setUrlParam(key, value, multi = false, FirstRemove = false) {
+            var url = new URL(window.location.href);
+            const searchParams = url.searchParams;
+            if (FirstRemove) {
+                searchParams.delete(key);
+            } else {
+                searchParams.delete(key);
+                if (value){
+                    const existingValue = searchParams.get(key);
+                    if (existingValue && !multi) {
+                        searchParams.set(key, value);
+                    } else {
+                        searchParams.append(key, value);
+                    }
+                }
+            }
+
+            window.history.pushState({ path: url.href }, '', url.href);
+        }
+
+        const GenerateCard = (id, region, announcement_for, title, price, location, s_meters, roomsCount, floorDetail, kvartal, thumbnail)=>{
+            const cardClass = viewportWidth > 767 ? 'col-md-4' : 'col-md-2';
+            const iconSize = viewportWidth > 767 ? '13' : '10';
+            const priceSize = viewportWidth > 767 ? '15' : '11';
+            const titleSize = viewportWidth > 767 ? '18' : '14';
+            const paddingSize = viewportWidth > 767 ? '4' : '2';
+            const locationSize = viewportWidth > 767 ? '15' : '11';
+            const cardHeight = viewportWidth > 767 ? 50 : 40;
+            const in_chilanzar = region==='Чиланзар';
+            const kvartalInfo = (kvartal  > 31 && in_chilanzar) ? `${region}, ${chilanzar_base.dataList[kvartal-1]}` : `${region}${region==='Чиланзар' ? `, ${kvartal}-квартал` : ''}`
+            const structure = `
+                <div class="${cardClass} wow fadeInUp" data-wow-delay="0.1s">
+                    <div class="property-item rounded overflow-hidden">
+                    <div class="position-relative overflow-hidden">
+                        <a href='/explore/${id}/'><img class="img-fluid custom-thumbnail AnnouncementThumbnail" src="${thumbnail}" alt=""></a>
+                    </div>
+                    ${announcement_for === 'в аренду' ? '<div id="announcement_type"><span id="my-badge">аренда</span></div>' : ''}
+                    <div class="p-${paddingSize} pb-2">
+                        <h5 style="font-size: ${priceSize}px;" class="text-dark mb-6">$${formatFloat(price)}</h5>
+                        <p style="font-size: ${locationSize}px;"><i style="font-size: ${locationSize}px;" class="fa fa-map-marker-alt text-dark me-1"></i>${kvartalInfo}</p>
+                        <div style="width:100%; min-height:${cardHeight}px; overflow:hidden">
+                            <a href='/explore/${id}/' style="font-size: ${titleSize}px;" class="d-block h5" href="">${title}</a>
+                        </div>
+                    </div>
+                    <div class="d-flex border-top">
+                        <small style="font-size: ${iconSize}px;" class="flex-fill text-center border-end py-2">${s_meters} к.м</small>
+                        <small style="font-size: ${iconSize}px;" class="flex-fill text-center border-end py-2">${roomsCount} Комнат</small>
+                        <small style="font-size: ${iconSize}px;" class="flex-fill text-center py-2">${floorDetail.current} из ${floorDetail.max}</small>
+                    </div>
+                    </div>
+                </div>
+            `
+            return structure
+        };
+
+        const EnableSearchButton = ()=>{
+            const buttonWindow = document.getElementById('SearchButtonField');
+            buttonWindow.classList.remove('invisible')
+            buttonWindow.classList.add('visible')
+        };
+
+        const EnableFilters = ()=>{
+            const filterWindow = document.getElementById('AllFilterPanel');
+            const ButtonDemonstration = document.getElementById('ButtonDemonstration');
+            filterWindow.classList.remove('invisible')
+            filterWindow.classList.add('visible')
+            ButtonDemonstration.classList.add('completelyGone')
+            setTimeout(() => {
+                EnableSearchButton();
+            }, 499);
+        };
+
+        function getChilanzarSections() {
+            let indexedValue = {};
+            let dataList = [];
+            let additionalOnes = ['Наккошлик', 'Думбрабод', 'Квартал Г9а', 'Квартал Ц', 'Квартал Е', 'Квартал И'];
+            for (let i = 1; i <= 32 + additionalOnes.length; i++) {
+                if (i <= 31) {
+                    let prefix = (26 < i && i <= 31) ? "(Алгоритм)" : '';
+                    let data = `${i}-Квартал${prefix ? ` ${prefix}` : ''}`;
+                    dataList.push(data);
+                    indexedValue[data] = i;
+                } else {
+                    let secondaryIndex = i - 32;
+                    let data = additionalOnes[secondaryIndex];
+                    if (data)
+                        dataList.push(data);
+                        indexedValue[data] = i;
+                }
+            }
+            return { indexedValue, dataList };
+        }
+
+        chilanzar_base = getChilanzarSections();
+
+        function ListProducts(data){
+            handleCardStyling(product_window);
+            data.forEach(eachData=>{
+                const id = eachData.id;
+                const room_count = eachData.room_count;
+                const floor = eachData.floor.apartment_floor;
+                const building_total_floor = eachData.floor.building_total_floor;
+                const price = eachData.price;
+                const landmark = eachData.landmark;
+                const location = eachData.location;
+                const location_kvartal = eachData.kvartal;
+                const square_meters = eachData.square_meters;
+                const thumbnail = eachData.thumbnail;
+                const tashkent_region = eachData.apartment_region;
+                const announcement_type = eachData.announcement_type;
+                const formedData = GenerateCard(id, tashkent_region, announcement_type, landmark, price, location, square_meters, room_count, {max:building_total_floor, current:floor}, location_kvartal, thumbnail);
+                product_window.innerHTML += formedData;
+            })
+            Loading(false);
+        }
+
+        function formatFloat(number) {
+            var parts = number.toString().split(".");
+            parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            if (parts[1] === "00") {
+                return parts[0];
+            }
+            return parts.join(".");
+        }
+
+        const GenerateFilterOption = (text, index, chilanzarSpecial)=>`<option data-option-id="${chilanzarSpecial ? `chilanzar-${index}` : ''}" id='${text}'>${text}</option>`
+
+        function ListFilter(filterDetails, type='choice', small=false, HideForNow=false, specific_id=null){
+            if (type==='choice' && Array.isArray(filterDetails.options) && filterWindow){
+                const ManualClaculationNeded = filterDetails.calculateYourself;
+                const options = filterDetails.options.map((each, index)=>{
+                    const data = index;
+                    const form = GenerateFilterOption(each, index, ManualClaculationNeded);
+                    return form
+                });
+                const structure = `
+                    <div id='${HideForNow ? 'ChilanzarDevisionsFilter' : 'ChilanzarSectionsFilter'}'>
+                        <label id="${specific_id ? 'ChilanLabel' : 'filterLabels'}">${filterDetails.filterLabel}</label>
+                        <select data-side="sections" id="${filterDetails.unique_id}" class="form-select border-0 py-3">
+                            <option checked>Все</option>
+                            ${options.join('')}
+                        </select>
+                    </div>
+                `
+                filterWindow.innerHTML += structure;
+            }
+        };
+
+        function ListStoreyFilter(){
+            const structure = `
+                <div class="col-md-1">
+                    <label id="filterLabels" style="margin-right:-5px">Этаж</label>
+                    <input onfocus='ResetOnFocus(event);' oninput="CheckIfDigit(event);" id="StoreyData" style="margin-left:0px; height:55px" type="text" class="form__field" value="Все">
+                </div>
+            `
+            filterWindow.innerHTML += structure;
+        }
+
+        function generateCommonChoices(maxNumber) {
+            const pairs = [];
+            let last_digit = 2;
+            for (let i = 1; i < maxNumber; i++) {
+                pairs.push(`${i} и ${i + 1}`);
+                last_digit = i + 1;
+            }
+            return [pairs, last_digit];
+        }
+
+        const PriceFilter = `
+                        <div class="PriceFilters">
+                            <h6 style="margin-left: -18px;">Цена</h6>
+                            <div style="display: flex; justify-content: left;">
+                                <div style="display: flex; justify-content: left; width: 85px;">
+                                    <div style="width: 14px; height: 48px; background-color: rgb(102, 102, 102)">
+                                        <h6 style="margin-top: 13px; color: white; text-align: center;">$</h6>
+                                    </div>
+                                    <div style="width: 65px; height: 47px; background-color: rgb(255, 255, 255);">
+                                        <input oninput="CheckIfDigit(event);" id="minPrice" type="text" class="form__field" placeholder="от">
+                                    </div>
+                                </div>
+                                <div style="display: flex; justify-content: left; ">
+                                    <div style="width: 14px; height: 48px; background-color:rgb(102, 102, 102);">
+                                        <h6 style="margin-top: 13px; color: white; text-align: center;">$</h6>
+                                    </div>
+                                    <div style="width: 65px; height: 47px; background-color: rgb(255, 255, 255);">
+                                        <input oninput="CheckIfDigit(event);" id="maxPrice" type="text" class="form__field" placeholder="до">
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
+                        </div>
+                        `
+        
+        const StoreyFilter = `
+                    <div id="storeyfilter" class="PriceFilters">
+                        <h6 style="margin-left: -15px;">Этаж</h6>
+                        <div style="display: flex; justify-content: space-evenly;">
+                            <div style="display: flex; justify-content: left; width: 65px;">
+                                <div style="width: 14px; height: 48px; background-color: rgb(102, 102, 102)">
+                                    <h6 style="margin-top: 13px; color: white; text-align: center;">↑</h6>
+                                </div>
+                                <div style="width: 45px; height: 47px; background-color: rgb(255, 255, 255);">
+                                    <input oninput="CheckIfDigit(event);" id="minStorey" type="text" class="form__field" placeholder="от">
+                                </div>
+                            </div>
+                            <div style="display: flex; justify-content: left;">
+                                <div style="width: 14px; height: 48px; background-color:rgb(102, 102, 102);">
+                                    <h6 style="margin-top: 13px; color: white; text-align: center;">↓</h6>
+                                </div>
+                                <div style="width: 45px; height: 47px; background-color: rgb(255, 255, 255);">
+                                    <input oninput="CheckIfDigit(event);" id="maxStorey" type="text" class="form__field" placeholder="до">
+                                </div>
+                            </div>
+                        </div>
+                        <br>
+                    </div>
+        `
+    const pricefilterWindow = document.getElementById('PriceANDStorey');
+    pricefilterWindow.innerHTML = PriceFilter
+    pricefilterWindow.innerHTML += StoreyFilter
+    const chilanzar_sections = {options: getChilanzarSections().dataList, calculateYourself:true, filterLabel:'Квартал', unique_id:'kvartalSections'};
+    const room_count_type = ['Однокомнатная', 'Двухкомнатная', 'Трехкомнатная', 'Четырехкомнатная'];
+    const indexed_room_count = {'Однокомнатная': 0, 'Двухкомнатная': 1, 'Трехкомнатная': 2, 'Четырехкомнатная': 3};
+    const room_count = {options: room_count_type, filterLabel:'ко. комнаты', unique_id:'roomCounter'};
+    
+    const HandlePrimaryRegions = (primary_region_data, hide=false)=>{
+        filterWindow.innerHTML = '';
+        ListFilter(primary_region_data);
+        ListFilter(chilanzar_sections, 'choice', false, true);
+        ListFilter(room_count);
+    };
+    
+    const EnableKvartalFilter = (enable=false)=>{
+        const section_choices = document.getElementById('ChilanzarDevisionsFilter');
+        if (enable){
+            section_choices.classList.remove('HideForNow')
+        }
+        else{
+            section_choices.classList.add('HideForNow')
+        }
+    };
+
+    const HandleRegionSelection = (event)=>{
+        const value = event.target.value;
+        if (value == 'Чиланзар'){
+            EnableKvartalFilter(true);
+        }
+        else{
+            EnableKvartalFilter(false);
+        }
+    };
+
+    const initiateAppRedirect = (phoneNumber)=>{
+        var url = "tel:" + phoneNumber;
+        var isAndroid = /Android/i.test(navigator.userAgent);
+        if (isAndroid) {url = "tel:" + phoneNumber;}
+        window.location.href = url;
+    };
+
+    const TriggerCall = ()=>{
+        if (phone_number)
+            initiateAppRedirect(phone_number);
+    };
+
+    const Loading = (enable=true)=>{
+        if (enable){
+            const loadingStructure = `
+                <div id="LoadingDisco" class="wrapper">
+                    <div class="circle"></div>
+                    <div class="circle"></div>
+                    <div class="circle"></div>
+                    <div class="shadow"></div>
+                    <div class="shadow"></div>
+                    <div class="shadow"></div>
+                    <span>Loading</span>
+                </div>
+            `
+            product_window.innerHTML = loadingStructure;
+        }
+        else{
+            const loadingWindow = document.getElementById('LoadingDisco');
+            if (loadingWindow)
+                loadingWindow.remove();
+        }
+    }
+
+    async function MakeRequest(pathname, body, type, callback){
+        const constructedUrl = host+pathname;
+        const request = await fetch(constructedUrl, {
+            'method': type,
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            'body': type == "POST" ? JSON.stringify(body) : null,
+        })
+        if ((request.status == 201) || (request.status == 200)){
+            const response = await request.json();
+            callback(response)
+        }
+        else{
+            console.log(request.status)
+            callback(null)
+        }
+    }
+
+    const filterRequest = (data)=>{
+        const HandleResult = (response)=>{
+            if(isObject(response)){
+                console.log(response.supported_regions)
+                if (response.result && response.result.length){
+                    ListProducts(response.result); 
+                    if (PreviousParamsRestoration){
+                        const supported_regions = {options: response.supported_regions, filterLabel:'Район', unique_id:'chilan_sections'}
+                        HandlePrimaryRegions(supported_regions);
+                        HandleReturnedFilterResult()
+                        PreviousParamsRestoration = false
+                        
+                    }
+                }
+                else{
+                    const data = HandleCachedLocation();
+                    if (data){
+                        HandlePrimaryRegions({options: data, filterLabel:'Район', unique_id:'chilan_sections'});
+                        HandleReturnedFilterResult();
+                    }
+                    setTimeout(() => {
+                        Loading(false);
+                        ShowNotFoundError();
+                        PreviousParamsRestoration = false
+                    }, 1999);
+                }
+            }else{
+                const data = HandleCachedLocation();
+                if (data){
+                    HandlePrimaryRegions({options: data, filterLabel:'Район', unique_id:'chilan_sections'});
+                    HandleReturnedFilterResult();
+                }
+                setTimeout(() => {
+                    Loading(false);
+                    ShowNotFoundError();
+                    PreviousParamsRestoration = false
+                }, 1999);
+            }
+        };
+        MakeRequest('FilterRequest/', data, "POST", HandleResult);
+    };
+
+    const HandleCachedLocation = (save=false, data=null)=>{
+        const cache_name = 'cachedLocation';
+        if (save && data){
+            localStorage.setItem(cache_name, JSON.stringify(data));
+        }
+        if (!save){
+            const retrievedData = localStorage.getItem(cache_name)
+            const processedData = retrievedData ? JSON.parse(retrievedData) : null;
+            return processedData;
+        }
+    };
+
+    const listAllAvailableAnnouncements = ()=>{
+        const listResultedProducts = (AllAnnouncements)=>{
+            if (isObject(AllAnnouncements)){
+                if (AllAnnouncements.data.length){
+                    const supported_regions = {options: AllAnnouncements.supported_regions, filterLabel:'Район', unique_id:'chilan_sections'}
+                    HandlePrimaryRegions(supported_regions);
+                    HandleCachedLocation(true, AllAnnouncements.supported_regions);
+                    ListProducts(AllAnnouncements.data);
+                    setTimeout(() => {
+                        EnableKvartalFilter(false);
+                    }, 999);
+
+                    if (PreviousParamsRestoration){
+                        HandleReturnedFilterResult();
+                        PreviousParamsRestoration = false;
+                    }
+                }else{
+                    ShowNotFoundError();
+                }
+            }
+            else{
+                ShowNotFoundError();
+            }
+        }
+        MakeRequest('AllAnnouncements/', null, "GET", listResultedProducts);
+    };
+
+    const ShowNotFoundError = ()=>{
+        const message = `
+            <div style="display: flex; width:100%">
+                <div style="height: 110px; width: 42%; display: flex; align-items:center; justify-content:right; ">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" fill="dark" class="bi bi-ban" viewBox="0 0 16 16">
+                        <path d="M15 8a6.97 6.97 0 0 0-1.71-4.584l-9.874 9.875A7 7 0 0 0 15 8M2.71 12.584l9.874-9.875a7 7 0 0 0-9.874 9.874ZM16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0"/>
+                    </svg> 
+                </div>
+                <div style="height: 110px; width: 50%; display: flex; align-items:center;">
+                    <h1 style="font-size:3.2vh; margin-left:5px;" >Не найдено</h1>
+                </div>
+            </div>
+        `;
+        product_window.innerHTML = message;
+    };
+    
+    const quickCheck = (data)=> (data == 'Все' || data == 0) ? null : data 
+
+    const getTypeFilter = ()=>{
+        const sales = document.getElementById('SalesFilter');
+        const rent = document.getElementById('RentFilter');
+        try {
+            const salesValue = Number(sales.value);
+            const rentValue = Number(rent.value);
+
+            if (isNaN(salesValue) || isNaN(rentValue)) {
+                throw new Error('Invalid input value');
+            }
+
+            if (salesValue === 0 && rentValue === 0) {
+                return [1, 1];
+            }
+
+            return [salesValue, rentValue];
+        } catch (error) {
+            console.error('Error:', error.message);
+            return [0, 0];
+        }
+    };
+
+    const SetFirstFilterButton = ()=>{
+        const buttonWindow = document.getElementById('ButtonFilter1');
+        buttonWindow.innerHTML = '<button onclick="Enable_or_Disable(event);" value="0" id="SalesFilter" type="button" class="btn btn-outline-secondary">Продажа</button>';
+    };
+
+    const SetSecondFilterButton = ()=>{
+        const buttonWindow = document.getElementById('ButtonFilter2');
+        buttonWindow.innerHTML = '<button onclick="Enable_or_Disable(event);" value="0" id="RentFilter" type="button" class="btn btn-outline-secondary">Аренда</button>';
+    };
+
+    const SetFilterButtons = ()=>{
+        SetFirstFilterButton();
+        SetSecondFilterButton();
+    };
+
+    SetFilterButtons();
+    
+    const Enable_or_Disable = (event) => {
+        if (event.target.classList.contains("active")) {
+            if (event.target.id === 'SalesFilter'){SetFirstFilterButton();};
+            if (event.target.id === 'RentFilter'){SetSecondFilterButton();};
+            
+        }else {
+            event.target.classList.add("active");
+            event.target.value = 1;
+        }
+    };
+
+    function extractDigits(data) {
+        const regex = /\d+/g;
+        const matches = data.match(regex);
+        if (matches && matches.length > 0) {
+            return matches.map(match => parseInt(match));
+        } else {
+            return [parseInt(data)];
+        }
+    }
+
+    function getUrlParamsForSearch() {
+        try {
+            const urlParams = new URLSearchParams(window.location.search);
+            const keys = [
+                'kvartal',
+                'amount_of_room',
+                'priceMinData',
+                'priceMaxData',
+                'including_sales',
+                'including_rent',
+                'region_choice',
+                'minimum_storey',
+                'maximum_storey'
+            ];
+            let result = {};
+            keys.forEach(key => {
+                result[key] = urlParams.get(key) ?? null;
+            });
+            let allNull = keys.every(key => result[key] === null);
+        return allNull ? null : result;
+    } catch (error) {
+        console.error('Error retrieving URL params:', error);
+        return null;
+    }
+}
+    
+    function TriggerSearch(params=null, data_provided=null){
+        if (!data_provided){
+            Loading(true);
+            const minStorey = document.getElementById('minStorey');
+            const maxStorey = document.getElementById('maxStorey');
+            const indexed_chilanzar = chilanzar_base.indexedValue;
+            const tashkent_region = document.getElementById('chilan_sections');
+            const RoomCount = document.getElementById('roomCounter');
+            const Storey = document.getElementById('smallfilter');
+            const PriceMin = document.getElementById('minPrice');
+            const PriceMax = document.getElementById('maxPrice');
+            const roomData = RoomCount.value || null;
+            const priceMinData = PriceMin.value || null;
+            const priceMaxData = quickCheck(PriceMax.value) || null;
+            //  --> kvartal <--
+            const Kvartal = document.getElementById('kvartalSections');
+            const sectionData = Kvartal ? Kvartal.value : null;
+            const kvartal_index = indexed_chilanzar[Kvartal.value];
+            const kvartal = (kvartalFilterActive === 'Все') ? null : kvartal_index;
+            //  --> kvartalend <--
+            const amount_of_room = indexed_room_count[roomData];
+            const type = getTypeFilter();
+            const including_sales = quickCheck(getTypeFilter()[0]);
+            const including_rent = quickCheck(getTypeFilter()[1]);
+            const region_choice = quickCheck(tashkent_region ? tashkent_region.value : null);
+            const minimum_storey = quickCheck(minStorey ? minStorey.value : null);
+            const maximum_storey = quickCheck(maxStorey ? maxStorey.value : null);
+            setUrlParam('kvartal', kvartal);
+            setUrlParam('amount_of_room', amount_of_room);
+            setUrlParam('priceMinData', priceMinData);
+            setUrlParam('priceMaxData', priceMaxData);
+            setUrlParam('including_sales', including_sales);
+            setUrlParam('including_rent', including_rent);
+            setUrlParam('region_choice', region_choice);
+            setUrlParam('minimum_storey', minimum_storey);
+            setUrlParam('maximum_storey', maximum_storey);
+            const params = {kvartal, amount_of_room, priceMinData, priceMaxData, including_sales, including_rent, region_choice, minimum_storey, maximum_storey};
+            filterRequest(params);
+            current_search_params = params;
+            PreviousParamsRestoration = false;
+        }
+        else{
+            const clean_data = FixKvartal(params);
+            console.log({...params, kvartal:clean_data})
+            filterRequest({...params, kvartal:clean_data});
+        }
+    };
+
+    function isNumeric(value) {
+        return !isNaN(value) && !isNaN(parseFloat(value));
+    }
+
+
+    function identifyString(value) {
+        if (typeof value === 'string') {
+            if (isNumeric(value)) {
+                return false;
+            } else {
+                return true;
+            }
+        } else {
+            return 'This is not a string.';
+        }
+    }
+
+    const FixKvartal = (data)=>{
+        const requested_data = data.kvartal;
+        if (requested_data){
+            const needsIndexing = identifyString(requested_data);
+            if (needsIndexing){
+                const index = Number(chilanzar_sections.options.indexOf(requested_data));
+                const final_result = index + 1;
+                if (final_result){return final_result}
+                else{
+                    var url = new URL(window.location.href);
+                    const searchParams = url.searchParams;
+                    searchParams.delete('kvartal');
+                    setUrlParam('kvartal', null)
+                    return null
+                }
+            }else{
+                return requested_data;
+            }
+        }
+    };
+
+    const selectOption = (desiredRegion)=>{
+        const dropdown = document.getElementById(desiredRegion);
+        console.log(dropdown)
+        if (dropdown)
+            dropdown.selected = true
+    };
+
+    const setPriceFiltervalues = (min=0, max=0)=>{
+        const minPoint = document.getElementById('minPrice');
+        const maxPoint = document.getElementById('maxPrice');
+        if (minPoint && maxPoint){
+            minPoint.value = min;
+            maxPoint.value = max;
+        }
+    };
+
+    const setFilterFiltervalues = (min=0, max=0)=>{
+        const minPoint = document.getElementById('minStorey');
+        const maxPoint = document.getElementById('maxStorey');
+        if (minPoint && maxPoint){
+            minPoint.value = min;
+            maxPoint.value = max;
+        }
+    };
+
+    const EnableFilterButton = (buttonElement) => {
+        buttonElement.classList.add("active");
+        buttonElement.value = 1;
+    };
+
+//?roomCount=3&including_sales=1&including_rent=1&region_choice=Учтепинский
+    function HandleReturnedFilterResult(){
+        const current_search_params = getUrlParamsForSearch();
+        if (current_search_params){
+            const tashkent_region = current_search_params.region_choice;
+            const region_kvartal = current_search_params.kvartal;
+            const amount_of_rooms = current_search_params.amount_of_room;
+            const min_price = current_search_params.priceMinData;
+            const max_price = current_search_params.priceMaxData;
+            const storeyMin = current_search_params.minimum_storey;
+            const storeyMax = current_search_params.maximum_storey;
+            const include_rent = current_search_params.including_rent;
+            const including_sales = current_search_params.including_sales;
+            let collectedMin;
+            let collectedMax;
+            let collectedStoreyMin;
+            let collectedStoreyMax;
+            if (tashkent_region){selectOption(tashkent_region);}
+            if (region_kvartal){
+                var element = document.querySelector(`[data-option-id="chilanzar-${region_kvartal-1}"]`);
+                console.log(element)
+                if (element)
+                    EnableKvartalFilter(true);
+                    element.selected = true
+            }
+            if (amount_of_rooms){selectOption(room_count_type[amount_of_rooms])}
+            if (min_price){collectedMin=min_price;};
+            if (max_price){collectedMax=max_price;}
+            if (storeyMin){collectedStoreyMin=storeyMin}
+            if (storeyMax){collectedStoreyMax=storeyMax}
+            if (collectedMax || collectedMin){setPriceFiltervalues(collectedMin, collectedMax);}
+            if (collectedStoreyMax || collectedStoreyMin){setFilterFiltervalues(collectedStoreyMin, collectedStoreyMax);}
+            if (including_sales || include_rent){
+                if (including_sales){
+                    const salesButton = document.getElementById('SalesFilter')
+                    EnableFilterButton(salesButton)
+                }
+                if (include_rent){
+                    const rentButton = document.getElementById('RentFilter')
+                    EnableFilterButton(rentButton)
+                }
+            }
+        }
+    };
+    
+    const ResetOnFocus = (event)=>{const data = event.target;if (data){if (data.value == 'Все'){data.value=''}}};
+    let urlParams = getUrlParamsForSearch();
+    if (urlParams){
+        const FilterGate = document.getElementById('ButtonDemonstration')
+        TriggerSearch(urlParams, true);
+    }else{listAllAvailableAnnouncements();}
+
+    setTimeout(() => {
+        const window = document.getElementById('chilan_sections');
+        if (window){window.addEventListener('input', HandleRegionSelection);}
+    }, 1200);
+
+    // SOCKET STUFF!!!!!!!!!
+
+    </script>
+</body>
+
+</html>

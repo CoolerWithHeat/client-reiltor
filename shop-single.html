@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Kvartir.uz - Apartment Details</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="apple-touch-icon" href="/img/icon-deal.png">
+    <link rel="shortcut icon" type="image/x-icon" href="/img/icon-deal.png">
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/assets/css/templatemo.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;200;300;400;500;700;900&display=swap">
+    <link rel="stylesheet" href="/assets/css/fontawesome.min.css">
+    <link rel="stylesheet" href="/assets/css/slick.min.css">
+    <link rel="stylesheet" href="/assets/css/slick-theme.css">
+    <link rel="stylesheet" href="/assets/css/custom.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="/carousel/css/owl.carousel.min.css">
+    <link rel="stylesheet" href="/carousel/css/style.css">
+</head>
+
+<body>
+    <div>
+        <nav class="navbar navbar-expand-lg bg-white py-0 px-0">
+            <div id="BrandSpace">
+                <div id="brandDiv1">
+                    <a href="">                    
+                        <img class="img-fluid" src="/img/icon-deal.png" alt="Icon" style="width: 25px; height: 25px;">
+                    </a>
+                </div>
+                <div id="brandDiv2">
+                    <a href="../../">
+                        <h2 class="text-primary" id="BrandName">Kvartir.uz</h2>
+                    </a>
+                </div>
+            </div>
+        </nav>
+    </div>
+    <!-- Open Content -->
+    <section class="bg-light">
+        <div class="container pb-5">
+            <div class="row">
+                <div class="col-lg-5 mt-5">
+                    <div id="ImagesHub"></div>
+                </div>
+                <div class="col-lg-7 mt-3">
+                    <div class="card">
+                        <div id="DetailsWindow" class="card-body"></div>
+                        <button onclick="ShowContactInfo();" style="background-color: #007bff; position: fixed; bottom: 15px; right: 15px; width: 90%; left: 15px; z-index: 2;" type="button" class="btn btn-primary"><img src="/img/call.png" style="width: 30px; color: white;" alt=""> Позвонить</button>
+                        <div id="phone_numbers_place"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Close Content -->
+    <div id="HumongousViewBase" style="display: none;"><div id="HumongousView"></div></div>
+
+    <div style="display: none;" class="slowlyAppearModified" id="NON_mobile"></div>
+    <!-- Start Article -->
+    <section class="py-5">
+        <div class="container">
+            <div id="RecommendationHeader" class="row text-left p-2 pb-3">
+                <h4>Рекомендуем</h4>
+                <hr>
+            </div>
+            <div class="tab-content">
+                <div id="tab-1" class="tab-pane fade show p-0 active">
+                    <div id="product_boundary" class="row g-4"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="/assets/js/jquery-1.11.0.min.js"></script>
+    <script src="/assets/js/jquery-migrate-1.2.1.min.js"></script>
+    <script src="/assets/js/bootstrap.bundle.min.js"></script>
+    <script src="/assets/js/templatemo.js"></script>
+    <script src="/assets/js/custom.js"></script>
+    <script src="/assets/js/slick.min.js"></script>
+
+    <!-- Carousel JS files -->
+    <script src="/carousel/js/owl.carousel.min.js"></script>
+    <script src="/carousel/js/main.js"></script>
+    <script src="/js/sockets.js"></script>
+
+    <script>
+        $('#carousel-related-product').slick({
+            infinite: true,
+            arrows: false,
+            slidesToShow: 4,
+            slidesToScroll: 3,
+            dots: true,
+            responsive: [{
+                    breakpoint: 1024,
+                    settings: {
+                        slidesToShow: 3,
+                        slidesToScroll: 3
+                    }
+                },
+                {
+                    breakpoint: 600,
+                    settings: {
+                        slidesToShow: 2,
+                        slidesToScroll: 3
+                    }
+                },
+                {
+                    breakpoint: 480,
+                    settings: {
+                        slidesToShow: 2,
+                        slidesToScroll: 3
+                    }
+                }
+            ]
+        });
+
+        const triggerBootstrapInitialization = ()=>{
+            $('.owl-carousel').owlCarousel({
+                loop: true,
+                margin: 1,
+                nav: true,
+                dots: true,
+                responsive: {
+                    0: {
+                        items: 1
+                    },
+                    600: {
+                        items: 1
+                    },
+                    1000: {
+                        items: 1
+                    }
+                },
+
+            });
+        };
+
+        function goToIndex(index) {
+            $('.owl-carousel').trigger('to.owl.carousel', [index, 300]);
+        }
+
+        function MakeUniqueJustIncase(array, property) {
+            try {
+                let uniqueValues = new Set();
+
+                let uniqueObjects = array.filter(obj => {
+                    if (!uniqueValues.has(obj[property])) {
+                        uniqueValues.add(obj[property]);
+                        return true;
+                    }
+                    return false;
+                });
+
+                return uniqueObjects;
+            } catch (error) {
+                console.error('Error filtering unique objects:', error);
+                return [];
+            }
+        }
+    
+        let contact_data;
+        let chilanzar_base;
+        let reiltor_number;
+        const viewportWidth = window.innerWidth || document.documentElement.clientWidth;
+        const host = window.location.protocol + "//" + window.location.host + '/serverdestination/'
+        var currentURL = window.location.href;
+        const announcement_id = getNumberFromUrl(currentURL);
+        const product_window = document.getElementById('product_boundary');
+        const handleCardStyling = (containerDiv)=>{if (viewportWidth > 767){}else{containerDiv.classList.remove('row'); containerDiv.classList.add('myFuckingContainer')}}
+
+        function formatFloat(number) {
+            var parts = number.toString().split(".");
+            parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            if (parts[1] === "00") {
+                return parts[0];
+            }
+            return parts.join(".");
+        }
+
+        const GenerateCard = (id, region, announcement_for, title, price, landmark, s_meters, roomsCount, floorDetail, kvartal, thumbnail)=>{
+            const cardClass = viewportWidth > 767 ? 'col-md-4' : 'col-md-2';
+            const iconSize = viewportWidth > 767 ? '13' : '11';
+            const locationIconSize = viewportWidth > 767 ? '17' : '15';
+            const priceSize = viewportWidth > 767 ? '15' : '13';
+            const titleSize = viewportWidth > 767 ? '17' : '15';
+            const locationSize = viewportWidth > 767 ? '15' : '12';
+            const paddingSize = viewportWidth > 767 ? '4' : '2';
+            const cardHeight = viewportWidth > 767 ? 50 : 40;
+            const in_chilanzar = region==='Чиланзар';
+            const kvartalInfo = (kvartal  > 31 && in_chilanzar) ? `${region}, ${chilanzar_base.dataList[kvartal-1]}` : `${region}${region==='Чиланзар' ? `, ${kvartal}-квартал` : ''}`
+            const structure = `
+                <div class="${cardClass} wow fadeInUp" data-wow-delay="0.1s">
+                    <div class="property-item rounded overflow-hidden">
+                    <div class="position-relative overflow-hidden">
+                        <a href="../${id}/"><img class="img-fluid custom-thumbnail AnnouncementThumbnail" src="${thumbnail}" alt=""></a>
+                    </div>
+                    ${announcement_for === 'в аренду' ? '<div id="announcement_type"><span id="my-badge">в аренду</span></div>' : ''}
+                    <div class="p-${paddingSize} pb-2">
+                        <h5 style="font-size: ${priceSize}px;" class="text-dark mb-6">$${formatFloat(price)}</h5>
+                        <small style="font-size: ${titleSize}px;"><i style="font-size: ${locationIconSize}px;" class="fa fa-map-marker-alt text-dark me-2"></i>${kvartalInfo}</small>
+                        <br>
+                        <div style="width:100%; min-height:${cardHeight}px; overflow:hidden; margin-top:12px">
+                            <a href='/explore/${id}/' style="font-size: ${titleSize}px;" class="d-block h5" href="">${landmark}</a>
+                        </div>
+                    </div>
+                    <div class="d-flex border-top">
+                        <small style="font-size: ${iconSize}px;" class="flex-fill text-center border-end py-2">${s_meters} к.м</small>
+                        <small style="font-size: ${iconSize}px;" class="flex-fill text-center border-end py-2">${roomsCount} Комнат</small>
+                        <small style="font-size: ${iconSize}px;" class="flex-fill text-center py-2 small">${floorDetail.current} из ${floorDetail.max}</small>
+                    </div>
+                    </div>
+                </div>
+            `
+            return structure
+        };
+        
+        function ListProducts(data){
+            handleCardStyling(product_window);
+            if (Array.isArray(data)){
+                data.forEach(eachData=>{
+                    const id = eachData.id;
+                    const room_count = eachData.room_count;
+                    const floor = eachData.floor.apartment_room_count;
+                    const building_total_floor = eachData.floor.building_total_floor;
+                    const price = eachData.price;
+                    const title = eachData.title;
+                    const landmark = eachData.landmark;
+                    const location_kvartal = eachData.kvartal;
+                    const square_meters = eachData.square_meters;
+                    const thumbnail = eachData.thumbnail;
+                    const tashkent_region = eachData.apartment_region;
+                    const announcement_type = eachData.announcement_type;
+                    const formedData = GenerateCard(id, tashkent_region, announcement_type, title, formatFloat(price), landmark, square_meters, room_count, {max:building_total_floor, current:floor}, location_kvartal, thumbnail);
+                    product_window.innerHTML += formedData;
+                })
+            }
+        }
+
+        const showPhoneNumbers = (reiltor)=>{
+            if (reiltor.main_reiltor_number){
+                initiateAppRedirect(reiltor.main_reiltor_number);
+            }
+        };
+
+        function isMobile() {
+            const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+            return /android|iphone|ipad|ipod|opera mini|iemobile|windows phone|blackberry|webos/i.test(userAgent);
+        }
+
+        const ShowContactInfo = ()=>{
+            if (contact_data){
+                if (isMobile()){
+                    showPhoneNumbers(contact_data);
+                }else{
+                    InsertPhoneNumber();
+                }
+            }
+        };
+        const initiateAppRedirect = (phoneNumber)=>{
+            var url = "tel:" + phoneNumber;
+            var isAndroid = /Android/i.test(navigator.userAgent);
+            if (isAndroid) {url = "tel:" + phoneNumber;}
+            window.location.href = url;
+        };
+        
+        async function MakeRequest(pathname, body, type, callback){
+            const constructedUrl = host+pathname;
+            const request = await fetch(constructedUrl, {
+                'method': type,
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                'body': type == "POST" ? JSON.stringify(body) : null,
+            })
+            if ((request.status == 201) || (request.status == 200)){
+                const response = await request.json();
+                callback(response)
+            }
+            else{
+                console.log(request.status)
+                callback(null)
+            }
+        }
+
+        const GetThumbnail = (url_list)=>{
+            return `
+                <div class="owl-2-style">
+                    <div class="owl-carousel">
+                        ${GenerateBootstrapimages(url_list).join('')}
+                    </div>
+                </div>
+            `};
+
+
+            function generateCarouselHTML(urls) {
+                const previoiusController = urls.length > 3 ? `                      
+                        <div class="col-1 align-self-center">
+                            <a href="#multi-item-example" role="button" data-bs-slide="prev">
+                                <i class="text-dark fas fa-chevron-left"></i>
+                                <span class="sr-only">Previous</span>
+                            </a>
+                        </div>
+                    ` : '<div style="width:15px"></div>'
+
+                const nextController = urls.length > 3 ? `                      
+                        <div class="col-1 align-self-center">
+                            <a href="#multi-item-example" role="button" data-bs-slide="next">
+                                <i class="text-dark fas fa-chevron-right"></i>
+                                <span class="sr-only">Next</span>
+                            </a>
+                        </div>
+                    ` : '<div style="width:15px"></div>'
+                    
+                let carouselHTML = `
+                    <div class="row">
+                        <!-- Start Controls -->
+                        ${previoiusController}
+                        <!-- End Controls -->
+                        <!-- Start Carousel Wrapper -->
+                        <div id="multi-item-example" class="col-10 carousel slide carousel-multi-item" data-bs-ride="carousel">
+                            <!-- Start Slides -->
+                            <div class="carousel-inner product-links-wap" role="listbox">
+                `;
+
+                // Iterate over URLs and group them into sets of three
+                for (let i = 0; i < urls.length; i += 3) {
+                    carouselHTML += `
+                        <!-- Start slide -->
+                        <div class="carousel-item${i === 0 ? ' active' : ''}">
+                            <div class="row">
+                    `;
+                    
+                    for (let j = i; j < Math.min(i + 3, urls.length); j++) {
+                        const current_url = urls[j];
+                        const url_index = urls.indexOf(current_url);
+                        carouselHTML += `
+                            <div class="col-4">
+                                <a href="#">
+                                    <img class="card-img img-fluid" onclick="setAsMain(${url_index+1});" src="${urls[j]}" alt="Product Image ${j + 1}">
+                                </a>
+                            </div>
+                        `;
+                    }
+
+                    carouselHTML += `
+                            </div>
+                        </div>
+                        <!-- End slide -->
+                    `;
+                }
+
+                carouselHTML += `
+                            <!-- End Slides -->
+                        </div>
+                        <!-- End Carousel Wrapper -->
+                        <!-- Start Controls -->
+                        <!-- End Controls -->
+                    </div>
+                    ${nextController}
+                </div>
+                `;
+                return carouselHTML;
+}
+
+        const SingleImage = (url)=>`
+                    <div class="col-4">
+                        <a href="#">
+                            <img class="card-img img-fluid" src="${url}" alt="Product Image 1">
+                        </a>
+                    </div>
+                `;
+
+        const GetAdditionalImages = (list_of_urls=[])=>{
+            if (list_of_urls.length){
+                const images = list_of_urls.map((each_url)=>each_url.file);
+                const html_data = generateCarouselHTML(images);
+                return html_data;
+            }
+            return '';
+        };
+
+        const DealWithEach = (response)=>{
+            const id = response.id;
+            const room_count = response.room_count;
+            const floor = response.floor.apartment_room_count;
+            const building_total_floor = response.floor.building_total_floor;
+            const price = response.price;
+            const title = response.title;
+            const location = response.location;
+            const location_kvartal = response.kvartal;
+            const square_meters = response.square_meters;
+            const thumbnail = response.thumbnail;
+            const announcement_description = response.description;
+            const kitchen = response.kitchen_size;
+            const landmark = response.landmark;
+            const tashkent_regions = response.apartment_region;
+            const morgage_allowed = response.mortgage_deal_possible;
+            const on_edge_apartment = response.end_wall_structure;
+            const images = {thumbnail:response.thumbnail, additional_image:response.images};
+            const announcement_for = response.announcement_type;
+            const material_used = response.construction_material;
+            PlaceAnnouncementDetails(price, landmark, announcement_for, location_kvartal, announcement_description, room_count, square_meters, kitchen, {current: floor, max: building_total_floor}, images, tashkent_regions, morgage_allowed, on_edge_apartment, material_used)
+        };
+
+        const GetAnnouncementDetails = ()=>{
+            const HandleResult = (serverResponse)=>{
+                DealWithEach(serverResponse.announcement);
+                ListProducts(serverResponse.recommendations);
+                contact_data = serverResponse.reiltor;
+                if(!serverResponse.recommendations.length){DisbaleRecommendationHeader()}
+            }
+            MakeRequest(`announcement/${announcement_id}/`, null, 'GET', HandleResult)
+        };
+
+        const additionalDetail = (name, data)=>{
+            return `
+                <div style="margin-left: 10px; margin-top: 15px;">
+                    <div style="width: 60px; height: 25px; text-align: center;"><small class="MainSignTag" style="">${data} м²</small></div>
+                    <div style="width: 60px; height: 25px; text-align: center;" id="BriefDetailHeading"><small class="SecondarySignTag">${name}</small></div>
+                </div>
+            `
+        }
+
+        const InsertPhoneNumber = (enable=true)=>{
+            const phone_window = document.getElementById('NON_mobile');
+            const structure = `
+                <div id="CallIconHub">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="45" height="45" fill="currentColor" class="bi bi-telephone-forward-fill" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M1.885.511a1.745 1.745 0 0 1 2.61.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.68.68 0 0 0 .178.643l2.457 2.457a.68.68 0 0 0 .644.178l2.189-.547a1.75 1.75 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.6 18.6 0 0 1-7.01-4.42 18.6 18.6 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877zm10.761.135a.5.5 0 0 1 .708 0l2.5 2.5a.5.5 0 0 1 0 .708l-2.5 2.5a.5.5 0 0 1-.708-.708L14.293 4H9.5a.5.5 0 0 1 0-1h4.793l-1.647-1.646a.5.5 0 0 1 0-.708"/>
+                    </svg>
+                </div>
+                <div onclick="InsertPhoneNumber(false);" id="CloseCallHub">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
+                        <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
+                    </svg>
+                </div>
+                <div id="PhoneNumberHub">
+                    <h1 style="color: white;" class="Display-1 fadeInUp">${contact_data.main_reiltor_number}</h1>
+                </div>
+            `;
+            if (enable && contact_data.main_reiltor_number){
+                phone_window.innerHTML = structure;
+                phone_window.classList.remove('FadeAway')
+                phone_window.removeAttribute('style')
+            }else{
+                phone_window.classList.add('FadeAway')
+                setTimeout(() => {
+                    phone_window.style.display='none';
+                }, 699);
+            }
+        };
+
+        function getChilanzarSections() {
+            let indexedValue = {};
+            let dataList = [];
+            let additionalOnes = ['Наккошлик', 'Думбрабод', 'Квартал Г9а', 'Квартал Ц', 'Квартал Е', 'Квартал И'];
+            for (let i = 1; i <= 32 + additionalOnes.length; i++) {
+                if (i <= 31) {
+                    let prefix = (26 < i && i <= 31) ? "(Алгоритм)" : '';
+                    let data = `${i}-Квартал${prefix ? ` ${prefix}` : ''}`;
+                    dataList.push(data);
+                    indexedValue[data] = i;
+                } else {
+                    let secondaryIndex = i - 32;
+                    let data = additionalOnes[secondaryIndex];
+                    if (data)
+                        dataList.push(data);
+                        indexedValue[data] = i;
+                }
+            }
+            return { indexedValue, dataList };
+        }
+
+        chilanzar_base = getChilanzarSections();
+
+        function PlaceAnnouncementDetails(price, location, announcement_for, kvartal, announcement_description, room_count, square_meters, kitchen, storey, images, tashkent_region, mortgage_possible, end_wall, material_used){
+            const detailWindow = document.getElementById('DetailsWindow');
+            const for_rent = announcement_for === 'в аренду';
+            const in_chilanzar = tashkent_region==='Чиланзар';
+            const kvartalInfo = (kvartal  > 31 && in_chilanzar) ? `${tashkent_region}, ${chilanzar_base.dataList[kvartal-1]}` : `${tashkent_region}${in_chilanzar ? `, ${kvartal}-квартал` : ''}`
+            const eachDivWidth = viewportWidth > 460 ? '75' : '60'
+            const eachDivTextWidth = viewportWidth > 460 ? '75' : '60'
+            if (images){
+                const imageWindow = document.getElementById('ImagesHub');
+                const thumbnail = images.thumbnail;
+                const other_images = images.additional_image;
+                const rental_sign_if_any = for_rent ? '<div id="main_announcement_type"><span id="main-my-badge">аренда</span></div>' : null;
+                const filtered_images = MakeUniqueJustIncase([{file: images.thumbnail}, ...other_images], 'file');
+                initializeSlider(filtered_images);
+                const images_structure = `
+                        ${thumbnail ? GetThumbnail(filtered_images) : ''}
+                        ${other_images ? GetAdditionalImages(other_images) : ''}
+                `
+                imageWindow.innerHTML = images_structure;
+                triggerBootstrapInitialization();
+                if(rental_sign_if_any){
+                    detailWindow.innerHTML = rental_sign_if_any;
+                }
+            }
+            const structure = `
+                        <h1 class="h2">$${formatFloat(price)}${for_rent ? `/<small>месяц</small` : ''}</h1>
+                        <p class="h4 py-2">${kvartalInfo}</p>
+                        <div id="primaryInformationDiv">
+                            <div id="secondaryInformationDiv">
+                                <div style="margin-left: 10px; margin-top: 15px;">
+                                    <div style="width: ${eachDivWidth}px; height: 25px; text-align: center; font-size: 10px;">
+                                        <small class="MainSignTag" style="margin-top: -5px;">${room_count}-комн.</small>
+                                    </div>
+                                    <div style="width: ${eachDivWidth}px; height: 25px; text-align: center;" id="BriefDetailHeading">
+                                        <small class="SecondarySignTag">квартира</small>
+                                    </div>
+                                </div>
+                                <div style="margin-left: 10px; margin-top: 15px;">
+                                    <div style="width: ${eachDivWidth}px; height: 25px; text-align: center;">
+                                        <small class="MainSignTag" style="margin-top: -5px;">${square_meters} м²</small>
+                                    </div>
+                                    <div style="width: ${eachDivWidth}px; height: 25px; text-align: center;" class="BriefDetailHeading">
+                                        <small class="SecondarySignTag">общая пл.</small>
+                                    </div>
+                                </div>
+                                ${kitchen == 0 || !kitchen ? '' : additionalDetail('кухня', kitchen)}
+                                <div style="margin-left: 10px; margin-top: 15px;">
+                                    <div style="width: ${eachDivWidth}px; height: 25px; text-align: center;">
+                                        <small class="MainSignTag" style="margin-top: -5px;">${storey.current} из ${storey.max}</small>
+                                    </div>
+                                    <div style="width: ${eachDivWidth}px; height: 25px; text-align: center;" id="BriefDetailHeading">
+                                        <small class="SecondarySignTag">этаж</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <br>
+                        <p class="h5 py-1">Торец: ${end_wall ? 'да' : 'нет'}</p>
+                        ${for_rent ? '' : `<p class="h5 py-1">Ипотека: ${mortgage_possible ? "есть" : "нет"}</p>`}
+                        <p class="h5 py-1">Тип строения: ${material_used}</p>
+                        <strong id="location_details"><i style="font-size: 19px;" class="fa fa-map-marker-alt text-dark me-2"></i>${location}</strong>
+                        <br>
+                        <br>
+                        <h6>Описание:</h6>
+                        <p>${announcement_description}</p>
+                    `
+                
+
+            detailWindow.innerHTML += structure;
+            setTimeout(() => {
+                const ImageFrame = document.getElementsByClassName('owl-stage-outer');
+                if (ImageFrame){
+                    ImageFrame[0].addEventListener('click', HumongousView)
+                }
+            }, 499);
+        };
+
+        GetAnnouncementDetails();
+
+        function HandleCall(event){
+            if (event){
+                const number = event.target.value;
+                if (number)
+                    initiateAppRedirect(number);
+
+            }
+        };
+
+        function getNumberFromUrl(url) {
+            const urlObj = new URL(url);
+            const pathname = urlObj.pathname;
+            const regex = /^\/explore\/(\d+)\/$/;
+            const match = pathname.match(regex);
+            if (match && match[1]) {
+                return parseInt(match[1], 10);
+            } else {
+                return null;
+            }
+        }
+        
+        const DisbaleRecommendationHeader = ()=>{
+            const window = document.getElementById('RecommendationHeader')
+            if (window){window.innerHTML = ''}
+        }
+
+        const setAsMain = (index)=>{
+            goToIndex(index);
+        };
+
+        const GenerateBootstrapimages = (urls)=>urls.map(each_url=>`
+            <div id="OwlImageDiv">
+                <img src="${each_url.file}" alt="apartment-Image" id="OwlImage">
+            </div>
+        `);
+
+        function DisableJakedupArrow(){
+            document.querySelectorAll('[data-bs-slide="next"]').forEach(function(element) {
+                    element.addEventListener('click', function(event) {
+                    event.preventDefault();
+                });
+            });
+        }
+
+        DisableJakedupArrow();
+
+    let currentIndex = 0;
+    let slideWidth = 0;
+    function initializeSlider(images=[]) {
+        if (images.length){
+            const viewWindow = document.getElementById('HumongousView');
+            const processed_images = images.map(each=>`<div class="slidee"><img src="${each.file}" alt="Image"></div>`);
+            const structure = `
+                <div onclick="HumongousView(false);" style="display: fixed; z-index:99; position:absolute; top: 3%; right: 1%;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="white" class="bi bi-x-lg" viewBox="0 0 16 16">
+                        <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
+                    </svg>
+                </div>
+                <div class="slider fadeInUp">
+                    <div class="slides">
+                        ${processed_images}
+                    </div>
+                    <div class="slowlyAppear" style="opacity:0" id="SlideControllers">
+                        <button id="nextHumongousButton" onclick="goPrev()" class="btn btn-light">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-chevron-left" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0"/>
+                            </svg>
+                        </button>
+                    
+                        <button id="prevHumongousButton" onclick="goNext()" class="btn btn-light">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-chevron-right" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708"/>
+                            </svg>
+                        </button>
+                        
+                    </div>
+                </div>
+            `;
+            viewWindow.innerHTML = structure;
+            EnableHumongousSlide();
+        }
+    }
+
+    function EnableHumongousSlide() {
+        const slides = document.querySelector('.slides');
+        const slider = document.querySelector('.slider');
+        let slideWidth = slider.clientWidth; 
+        let startX;
+        let currentX;
+        let isDragging = false;
+        let currentIndex = 0;
+        let startTranslateX = 0;
+
+        const handleTouchStart = (e) => {
+            startX = e.touches[0].clientX;
+            startTranslateX = getCurrentTranslateX();
+            isDragging = true;
+            slides.style.transition = 'none';
+        };
+
+        const handleTouchMove = (e) => {
+            if (!isDragging) return;
+            currentX = e.touches[0].clientX;
+            const moveX = currentX - startX;
+            const newTranslateX = startTranslateX + moveX;
+            slides.style.transform = `translateX(${newTranslateX}px)`;
+        };
+
+        const handleTouchEnd = () => {
+            if (!isDragging) return;
+            isDragging = false;
+            const moveX = currentX - startX;
+            if (Math.abs(moveX) > slideWidth / 2) {
+            if (moveX > 0) {
+                goPrev();
+            } else {
+                goNext();
+            }
+            } else {
+            slides.style.transition = 'transform 0.5s ease';
+            slides.style.transform = `translateX(${currentIndex * -slideWidth}px)`;
+            }
+        };
+
+        window.addEventListener('resize', () => {
+            slideWidth = slider.clientWidth;
+            slides.style.transform = `translateX(${currentIndex * -slideWidth}px)`;
+        });
+
+        slides.addEventListener('touchstart', handleTouchStart);
+        slides.addEventListener('touchmove', handleTouchMove);
+        slides.addEventListener('touchend', handleTouchEnd);
+
+        slides.addEventListener('touchmove', (e) => {
+            e.preventDefault();
+        });
+
+        function getCurrentTranslateX() {
+            const transformStyle = window.getComputedStyle(slides).transform;
+            const transformMatrix = new WebKitCSSMatrix(transformStyle);
+            return transformMatrix.m41;
+        }
+    }
+
+    function goPrev() {
+        const slides = document.querySelector('.slides');
+        const slider = document.querySelector('.slider');
+        let slideWidth = slider.clientWidth;
+
+        currentIndex = Math.max(currentIndex - 1, 0);
+        slides.style.transition = 'transform 0.5s ease';
+        slides.style.transform = `translateX(${currentIndex * -slideWidth}px)`;
+    }
+
+    function goNext() {
+        const slides = document.querySelector('.slides');
+        const slider = document.querySelector('.slider');
+        let slideWidth = slider.clientWidth;
+
+        currentIndex = Math.min(currentIndex + 1, document.querySelectorAll('.slidee').length - 1);
+        slides.style.transition = 'transform 0.5s ease';
+        slides.style.transform = `translateX(${currentIndex * -slideWidth}px)`;
+    }
+
+
+    const HumongousView = (enable=true)=>{
+        const humongousViewBase = document.getElementById('HumongousViewBase');
+        if (enable){
+            humongousViewBase.removeAttribute('style');
+            humongousViewBase.classList.remove('FadeAway')
+        }else{
+            humongousViewBase.classList.add('FadeAway')
+            setTimeout(() => {
+                humongousViewBase.style.display = 'none';
+            }, 699);
+        }
+    };
+
+    </script>
+
+</body>
+
+</html>

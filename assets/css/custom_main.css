@@ -1,0 +1,256 @@
+
+#sections, [data-side="sections"]{
+    box-shadow: 1px 1px 0px 1px rgba(54, 54, 54, 0.082);
+  }
+
+  #smallfilter{
+    width: 90px;
+  }
+
+  #sections::-webkit-scrollbar {
+    width: 10px;
+  }
+
+  #sections::-webkit-scrollbar-thumb {
+    background-color: #5061ff;
+    border-radius: 5px;
+  }
+
+
+  #filterLabels{
+    color: #505050;
+  }
+
+@media (max-width:460px){
+  .AnnouncementThumbnail{
+    object-fit: cover;
+    max-height: 125px;
+    min-height: 125px;
+    min-width: 100%;
+  }
+
+  #announcement_type{
+    width: 55px;
+    height: 30px;
+    float: right;
+    font-size: 16px;
+  }
+  
+  #my-badge {
+    display: inline-block;
+    padding: 0.25em 0.5em;
+    font-size: 0.60em;
+    font-weight: 700;
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: 0.25rem;
+    background-color: #3d3d3d;
+    color: #fff;
+  }
+  
+  #AllFilterPanel{
+    width: 110%;
+  }
+
+  #ButtonDemonstration{
+    display: flex;
+    justify-content: left;
+    width: 90%;
+    margin: auto;
+    border-radius: 10px;
+    border-width: 1px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+  }
+}
+
+@media (min-width:460px){
+  .AnnouncementThumbnail{
+    min-height: 240px;
+    max-height: 240px;
+    width: 300px;
+  }
+  .custom-thumbnail {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  #announcement_type{
+    width: 75px;
+    height: 30px;
+    float: right;
+    font-size: 16px;
+  }
+  
+  #SearchButtonField{
+    margin-top: 60px;
+  }
+
+  #my-badge {
+    display: inline-block;
+    padding: 0.25em 0.5em;
+    font-size: 0.80em;
+    font-weight: 700;
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: 0.25rem;
+    background-color: #3d3d3d;
+    color: #fff;
+  }
+  #AllFilterPanel{
+    width: 80%;
+  }
+  #ButtonDemonstration{
+    display: flex;
+    justify-content: left;
+    width: 450px;
+    margin-left: 50px;
+    border-radius: 10px;
+    border-width: 1px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+    cursor: pointer;
+  }
+}
+
+
+.HideForNow{
+    display: none;
+}
+
+.form__field{
+  width: 95%;
+} 
+
+.invisible {
+  background-color: #f0f0f0;
+  margin-top: 20px;
+  overflow: hidden;
+  max-height: 0;
+  opacity: 0;
+  visibility: hidden;
+  transition: max-height 0.5s ease-in-out, opacity 0.5s ease-in-out;
+}
+
+.visible {
+  max-height: 500px;
+  opacity: 1;
+  visibility: visible;
+  transition: max-height 1s ease-in-out, opacity 0.8s ease-in-out;
+}
+
+#ShowFilterButton{
+  width: 88%;
+  display: block;
+  margin: auto;
+}
+
+@keyframes fadeOut {
+  from {
+      opacity: 1;
+  }
+  to {
+      opacity: 0;
+  }
+}
+
+.disappear {
+  animation: fadeOut 0.6s ease-out forwards;
+}
+
+#PriceANDStorey{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: left;
+}
+@keyframes reduceHeightAndFade {
+  0% {
+    height: 100px;
+    opacity: 1;
+  }
+  50% {
+    height: 50px;
+    opacity: 0;
+  }
+  100% {
+    height: 0;
+    opacity: 0;
+  }
+}
+
+.completelyGone {
+  height: 100px;
+  opacity: 0;
+  animation: reduceHeightAndFade 1.9s forwards;
+}
+
+
+.slowly-invisible{
+  animation: fadeOut 1s ease-out forwards;
+}
+
+body{
+  background-color: transparent;
+}
+
+.form-control::placeholder {
+  text-align: center; 
+}
+
+
+#Iconwindow{
+  display: flex;
+  text-align: center;
+  width: 18%;
+  height: 40px;
+  justify-content: center;
+  align-items: center;
+}
+#Titlewindow{
+  display: flex;
+  width: 75%;
+  height: 40px;
+}
+
+#BrandSpace {
+  display: flex; 
+  justify-content: left;
+}
+
+#brandDiv1{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 50px;
+  height: 35px;
+}
+
+#brandDiv2{
+  display: flex;
+  justify-content: left;
+  align-items: center;
+  width: 150px;
+  height: 35px;
+}
+
+#BrandName{
+  font-size: 1.2rem;
+  margin-top: 7px;
+}
+#PriceANDStorey{
+  display: flex;
+  justify-content: left;
+  width: 100%;
+  margin-left: 15px;
+} 
+
+@media (min-width:350px){
+  #storeyfilter{
+    margin-left: 30px;
+  }
+}
