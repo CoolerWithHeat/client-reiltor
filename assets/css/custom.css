@@ -20,7 +20,6 @@
   }
 
   @media (max-width:460px){
-    
     .AnnouncementThumbnail{
       object-fit: cover;
       max-height: 125px;
@@ -34,6 +33,7 @@
       float: right;
       font-size: 16px;
     }
+
     #my-badge {
       display: inline-block;
       padding: 0.25em 0.5em;
@@ -48,6 +48,7 @@
       color: #fff;
     }
   }
+
   @media (min-width:460px){
     .AnnouncementThumbnail{
       min-height: 240px;
@@ -185,7 +186,7 @@
 
   .owl-stage-outer{
     border-radius: 5px;
-    max-height: 300px !important;
+    max-height: 360px !important;
   }
   body{
     background-color: white;
@@ -208,40 +209,6 @@
     display: flex;
     transition: transform 0.5s ease;
   } 
-  .slidee {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-width: 100%;
-    box-sizing: border-box;
-    max-height: 600px;
-    overflow: hidden;
-    position: relative;
-  }
-  
-  .slide img {
-    min-width: 100%;
-    min-height: 100%;
-    display: block;
-    height: auto;
-    object-fit: contain;
-    position: relative;
-  }
-  
-@media (max-width: 460px){
-  .slider {
-    overflow: hidden; 
-    width: 96%;
-    margin-bottom: 100px;
-  }
-}
-
-@media (min-width: 460px){
-  .slider {
-    overflow: hidden; 
-    width: 30%;
-  }
-}
 
 #SlideControllers{
   display: flex;
@@ -330,4 +297,58 @@
   height: 55px;
   display: flex;
   justify-content: right;
+}
+
+
+@media (max-width: 560px){
+  .slider {
+    overflow: hidden; 
+    width: 100%;
+    margin-bottom: 100px;
+  }
+  .slidee {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-width: 100vw;
+    box-sizing: border-box;
+    max-height: 750px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .slidee img {
+    min-width: 100%;
+    height: auto;
+    object-fit: contain;
+    position: relative;
+    margin: auto;
+  }
+}
+
+@media (min-width: 560px){
+  .slider {
+    overflow: hidden; 
+    width: 65vh;
+    margin-bottom: 50px;
+  }
+
+  .slidee {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-width: 65vh;
+    box-sizing: border-box;
+    max-height: 600px;
+    overflow: hidden;
+    position: relative;
+  }
+  
+  .slidee img {
+    max-width: 86%;
+    height: auto;
+    object-fit: contain;
+    position: relative;
+    margin: auto;
+  }
 }

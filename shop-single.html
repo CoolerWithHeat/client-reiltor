@@ -48,7 +48,7 @@
                 <div class="col-lg-7 mt-3">
                     <div class="card">
                         <div id="DetailsWindow" class="card-body"></div>
-                        <button onclick="ShowContactInfo();" style="background-color: #007bff; position: fixed; bottom: 15px; right: 15px; width: 90%; left: 15px; z-index: 2;" type="button" class="btn btn-primary"><img src="/img/call.png" style="width: 30px; color: white;" alt=""> Позвонить</button>
+                        <button onclick="ShowContactInfo();" style="background-color: #007bff; position: fixed; bottom: 15px; right: 15px; width: 90%; left: 15px; z-index: 2; margin: auto;" type="button" class="btn btn-primary"><img src="/img/call.png" style="width: 30px; color: white;" alt=""> Позвонить</button>
                         <div id="phone_numbers_place"></div>
                     </div>
                 </div>
@@ -298,7 +298,7 @@
             function generateCarouselHTML(urls) {
                 const previoiusController = urls.length > 3 ? `                      
                         <div class="col-1 align-self-center">
-                            <a href="#multi-item-example" role="button" data-bs-slide="prev">
+                            <a id="PrevButton" href="#multi-item-example" role="button" data-bs-slide="prev">
                                 <i class="text-dark fas fa-chevron-left"></i>
                                 <span class="sr-only">Previous</span>
                             </a>
@@ -307,7 +307,7 @@
 
                 const nextController = urls.length > 3 ? `                      
                         <div class="col-1 align-self-center">
-                            <a href="#multi-item-example" role="button" data-bs-slide="next">
+                            <a id="NextButton" href="#multi-item-example" role="button" data-bs-slide="next">
                                 <i class="text-dark fas fa-chevron-right"></i>
                                 <span class="sr-only">Next</span>
                             </a>
@@ -549,6 +549,12 @@
                 const ImageFrame = document.getElementsByClassName('owl-stage-outer');
                 if (ImageFrame){
                     ImageFrame[0].addEventListener('click', HumongousView)
+                    setTimeout(() => {
+                        AnimateNext(true);
+                        setTimeout(() => {
+                            AnimateNext(false);
+                        }, 999);
+                    }, 149);
                 }
             }, 499);
         };
@@ -603,33 +609,33 @@
 
     let currentIndex = 0;
     let slideWidth = 0;
-    function initializeSlider(images=[]) {
-        if (images.length){
+    
+    function initializeSlider(images = []) {
+        if (images.length) {
             const viewWindow = document.getElementById('HumongousView');
-            const processed_images = images.map(each=>`<div class="slidee"><img src="${each.file}" alt="Image"></div>`);
+            const processed_images = images.map(each => `<div class="slidee"><img src="${each.file}" alt="Image"></div>`);
             const structure = `
-                <div onclick="HumongousView(false);" style="display: fixed; z-index:99; position:absolute; top: 3%; right: 1%;">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="white" class="bi bi-x-lg" viewBox="0 0 16 16">
-                        <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
+                <div onclick="HumongousView(false);" style="display: fixed; z-index:99; position:absolute; top: 3%; right: 1%; cursor: pointer;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="white" class="bi bi-x" viewBox="0 0 16 16">
+                        <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
                     </svg>
                 </div>
                 <div class="slider fadeInUp">
-                    <div class="slides">
-                        ${processed_images}
+                    <div class="slides" style="display: flex;">
+                        ${processed_images.join('')}
                     </div>
                     <div class="slowlyAppear" style="opacity:0" id="SlideControllers">
-                        <button id="nextHumongousButton" onclick="goPrev()" class="btn btn-light">
+                        <button id="prevHumongousButton" onclick="goPrev()" class="btn btn-light">
                             <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-chevron-left" viewBox="0 0 16 16">
                                 <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0"/>
                             </svg>
                         </button>
                     
-                        <button id="prevHumongousButton" onclick="goNext()" class="btn btn-light">
+                        <button id="nextHumongousButton" onclick="goNext()" class="btn btn-light">
                             <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-chevron-right" viewBox="0 0 16 16">
                                 <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708"/>
                             </svg>
                         </button>
-                        
                     </div>
                 </div>
             `;
@@ -641,12 +647,17 @@
     function EnableHumongousSlide() {
         const slides = document.querySelector('.slides');
         const slider = document.querySelector('.slider');
-        let slideWidth = slider.clientWidth; 
+        slideWidth = slider.clientWidth;
+        slides.style.width = `${slideWidth * document.querySelectorAll('.slidee').length}px`;
+        document.querySelectorAll('.slidee').forEach(slide => {
+            slide.style.width = `${slideWidth}px`;
+        });
+
         let startX;
         let currentX;
         let isDragging = false;
-        let currentIndex = 0;
         let startTranslateX = 0;
+        const minSwipeDistance = 20;
 
         const handleTouchStart = (e) => {
             startX = e.touches[0].clientX;
@@ -667,27 +678,30 @@
             if (!isDragging) return;
             isDragging = false;
             const moveX = currentX - startX;
-            if (Math.abs(moveX) > slideWidth / 2) {
-            if (moveX > 0) {
-                goPrev();
+            if (Math.abs(moveX) > minSwipeDistance) {
+                if (moveX > 0) {
+                    goPrev();
+                } else {
+                    goNext();
+                }
             } else {
-                goNext();
-            }
-            } else {
-            slides.style.transition = 'transform 0.5s ease';
-            slides.style.transform = `translateX(${currentIndex * -slideWidth}px)`;
+                slides.style.transition = 'transform 0.5s ease';
+                slides.style.transform = `translateX(-${currentIndex * slideWidth}px)`;
             }
         };
 
         window.addEventListener('resize', () => {
             slideWidth = slider.clientWidth;
-            slides.style.transform = `translateX(${currentIndex * -slideWidth}px)`;
+            slides.style.width = `${slideWidth * document.querySelectorAll('.slidee').length}px`;
+            document.querySelectorAll('.slidee').forEach(slide => {
+                slide.style.width = `${slideWidth}px`;
+            });
+            slides.style.transform = `translateX(-${currentIndex * slideWidth}px)`;
         });
 
         slides.addEventListener('touchstart', handleTouchStart);
         slides.addEventListener('touchmove', handleTouchMove);
         slides.addEventListener('touchend', handleTouchEnd);
-
         slides.addEventListener('touchmove', (e) => {
             e.preventDefault();
         });
@@ -702,34 +716,43 @@
     function goPrev() {
         const slides = document.querySelector('.slides');
         const slider = document.querySelector('.slider');
-        let slideWidth = slider.clientWidth;
+        slideWidth = slider.clientWidth;
 
         currentIndex = Math.max(currentIndex - 1, 0);
         slides.style.transition = 'transform 0.5s ease';
-        slides.style.transform = `translateX(${currentIndex * -slideWidth}px)`;
+        slides.style.transform = `translateX(-${currentIndex * slideWidth}px)`;
     }
 
     function goNext() {
         const slides = document.querySelector('.slides');
         const slider = document.querySelector('.slider');
-        let slideWidth = slider.clientWidth;
+        slideWidth = slider.clientWidth;
 
         currentIndex = Math.min(currentIndex + 1, document.querySelectorAll('.slidee').length - 1);
         slides.style.transition = 'transform 0.5s ease';
-        slides.style.transform = `translateX(${currentIndex * -slideWidth}px)`;
+        slides.style.transform = `translateX(-${currentIndex * slideWidth}px)`;
     }
 
-
-    const HumongousView = (enable=true)=>{
+    const HumongousView = (enable = true) => {
         const humongousViewBase = document.getElementById('HumongousViewBase');
-        if (enable){
+        if (enable) {
             humongousViewBase.removeAttribute('style');
-            humongousViewBase.classList.remove('FadeAway')
-        }else{
-            humongousViewBase.classList.add('FadeAway')
+            humongousViewBase.classList.remove('FadeAway');
+        } else {
+            humongousViewBase.classList.add('FadeAway');
             setTimeout(() => {
-                humongousViewBase.style.display = 'none';
-            }, 699);
+                humongousViewBase.setAttribute('style', 'display: none;');
+            }, 599);
+        }
+    }
+
+    const AnimateNext = (next=true)=>{
+        if (next){
+            const nextElement = document.getElementById('NextButton');
+            nextElement.click()
+        }else{
+            const prevElement = document.getElementById('PrevButton');
+            prevElement.click()
         }
     };
 
