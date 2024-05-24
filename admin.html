@@ -49,17 +49,6 @@
             </div>
         </div>
         <div id="BothHolder">
-            <!-- <div id="NumberDemonstration">
-                <div for="formGroupExampleInput2" class="form-label">+998 99 045 1768</div>
-                <div for="formGroupExampleInput1" class="form-label">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="red" class="bi bi-trash-fill" viewBox="0 0 16 16">
-                        <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5M8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5m3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0"/>
-                    </svg>
-                </div>
-            </div> -->
-            <!-- <div id="NumberDemonstration">
-                <label for="formGroupExampleInput2" class="form-label">+998 99 045 1768</label>
-            </div> -->
             <div id="OptionPanel">
                 <div>
                     <button id="AnnouncementButton" onclick="SelectTab(event);" data-index="1" class="btn btn-outline-dark">Объявление</button>
@@ -270,6 +259,7 @@
         const roomStructureOptions = isObject(formData.roomStructureOptions) ? makeOptions(formData.roomStructureOptions) : null;
         const thumbnail = formData.thumbnail ? formData.thumbnail : '';
         const images = formData.images ? MakeImages(formData.images) : '';
+
         let formHTML = `
             <div>
                 ${price === '' ? `<h2>Новое объявление</h2>` : ''}
@@ -286,7 +276,124 @@
                 </div>
             </div>
         `;
-                
+        
+
+        // Region
+        formHTML += `
+            <div class="form-group row">
+                <label for="id_apartment_region" class="col-sm-3 col-form-label">Район</label>
+                <div class="col-sm-9">
+                    <select id="id_apartment_region" name="apartment_region" class="form-control" required>
+                        <!-- Other options -->
+                        ${regionOptions}
+                    </select>
+                </div>
+            </div>
+            <br>
+        `;
+
+
+        // Kvartal
+        formHTML += `
+            <div class="form-group row">
+                <label for="id_kvartal" class="col-sm-3 col-form-label">Квартал</label>
+                <div class="col-sm-9">
+                    <select id="id_kvartal" name="kvartal" class="form-control" required>
+                        ${kvartalOptions}
+                    </select>
+                </div>
+            </div>
+            <br>
+        `;
+
+        formHTML += `
+            <div class="form-group row">
+                <label for="id_floor" class="col-sm-9 col-form-label">Этаж</label>
+                <div class="col-sm-9">
+                    <input data-id="3" oninput="UpdateStorey(event);" type="text" id="id_floor_1" name="floor" placeholder="Этажность здания" class="form-control" value="${floor_data_1}">
+                </div>
+                <div class="col-sm-9">
+                    <input data-id="2" oninput="UpdateStorey(event);" type="text" id="id_floor_2" name="floor" placeholder="Этаж квартиры" class="form-control" value="${floor_data_2}">
+                </div>
+                <div class="col-sm-9">
+                    <input data-id="1" oninput="UpdateStorey(event);" type="text" id="id_floor_3" name="floor" placeholder="количество комнаты в квартире" class="form-control" value="${floor_data_3}">
+                </div>
+            </div>
+            <br>
+            <div style="width:75px; height:25px; float:right; display:flex; justify-content:right;">
+                <div id="storey_1">${floor_data_3 ? `${floor_data_3}/` : ' '}</div>
+                <div id="storey_2">${floor_data_2 ? `${floor_data_2}/` : ' '}</div>
+                <div id="storey_3">${floor_data_1 ? `${floor_data_1}/` : ' '}</div>
+            </div>
+            <br>
+        `;
+
+
+        // Landmark
+        formHTML += `
+            <div class="form-group row">
+                <label for="id_landmark" class="col-sm-3 col-form-label">Ориентир</label>
+                <div class="col-sm-9">
+                    <input type="text" id="id_landmark" name="landmark" class="form-control" value="${landmark}" required>
+                </div>
+            </div>
+            <br>
+        `;
+
+        // Construction Material
+        formHTML += `
+            <div class="form-group row">
+                <label for="id_construction_material" class="col-sm-3 col-form-label">Тип строения</label>
+                <div class="col-sm-9">
+                    <select id="id_construction_material" name="construction_material" class="form-control" required>
+                        ${materialOptions}
+                        <!-- Other options -->
+                    </select>
+                </div>
+            </div>
+            <br>
+        `;
+
+
+        // Square Meters
+        formHTML += `
+            <div class="form-group row">
+                <label for="id_square_meters" class="col-sm-3 col-form-label">Площадь м²</label>
+                <div class="col-sm-9">
+                    <input type="number" step="0.01" min="0" id="id_square_meters" name="square_meters" class="form-control" value="${square_meters}" required>
+                </div>
+            </div>
+            <br>
+        `;
+
+        // Room Layout
+        formHTML += `
+            <div class="form-group row">
+                <label for="id_room_layout" class="col-sm-3 col-form-label">Планировка</label>
+                <div class="col-sm-9">
+                    <select id="id_room_layout" name="room_layout" class="form-control" required>
+                        <!-- Other options -->
+                        ${roomStructureOptions}
+                    </select>
+                </div>
+            </div>
+            <br>
+        `;
+
+        // Bathroom
+        formHTML += `
+            <div class="form-group row">
+                <label for="id_bathroom" class="col-sm-3 col-form-label">Сан узел</label>
+                <div class="col-sm-9">
+                    <select id="id_bathroom" name="bathroom" class="form-control" required>
+                        ${sanuzelOptions}
+                        <!-- Other options -->
+                    </select>
+                </div>
+            </div>
+            <br>
+        `;
+
         // Price
         formHTML += `
             <div class="form-group row">
@@ -298,16 +405,6 @@
             <br>
         `;
 
-        // Thumbnail
-        formHTML += `
-            <div class="form-group row">
-                <label for="id_thumbnail" class="col-sm-3 col-form-label">Миниатюра</label>
-                <div class="col-sm-9">
-                    <input type="file" id="id_thumbnail" name="thumbnail" class="form-control-file" required>
-                </div>
-            </div>
-            <br>
-        `;
 
         // Description
         formHTML += `
@@ -315,6 +412,18 @@
                 <label for="id_description" class="col-sm-3 col-form-label">Описание</label>
                 <div class="col-sm-9">
                     <textarea id="id_description" name="description" class="form-control" rows="4" required>${description}</textarea>
+                </div>
+            </div>
+            <br>
+        `;
+            
+
+        // Thumbnail
+        formHTML += `
+            <div class="form-group row">
+                <label for="id_thumbnail" class="col-sm-3 col-form-label">главное изображение</label>
+                <div class="col-sm-9">
+                    <input type="file" id="id_thumbnail" name="thumbnail" class="form-control-file" required>
                 </div>
             </div>
             <br>
@@ -343,31 +452,6 @@
             <br>
         `;
 
-        // Square Meters
-        formHTML += `
-            <div class="form-group row">
-                <label for="id_square_meters" class="col-sm-3 col-form-label">общий площадь м²</label>
-                <div class="col-sm-9">
-                    <input type="number" step="0.01" min="0" id="id_square_meters" name="square_meters" class="form-control" value="${square_meters}" required>
-                </div>
-            </div>
-            <br>
-        `;
-
-        // Region
-        formHTML += `
-            <div class="form-group row">
-                <label for="id_apartment_region" class="col-sm-3 col-form-label">Район</label>
-                <div class="col-sm-9">
-                    <select id="id_apartment_region" name="apartment_region" class="form-control" required>
-                        <!-- Other options -->
-                        ${regionOptions}
-                    </select>
-                </div>
-            </div>
-            <br>
-        `;
-
         // Announcement Type
         formHTML += `
             <div class="form-group row">
@@ -375,43 +459,6 @@
                 <div class="col-sm-9">
                     <select id="id_announcement_type" name="announcement_type" class="form-control" required>
                         ${announcementOptions}
-                    </select>
-                </div>
-            </div>
-            <br>
-        `;
-
-
-        formHTML += `
-            <div class="form-group row">
-                <label for="id_floor" class="col-sm-9 col-form-label">Этаж</label>
-                <div class="col-sm-9">
-                    <input data-id="3" oninput="UpdateStorey(event);" type="text" id="id_floor_1" name="floor" placeholder="Этажность здания" class="form-control" value="${floor_data_1}">
-                </div>
-                <div class="col-sm-9">
-                    <input data-id="2" oninput="UpdateStorey(event);" type="text" id="id_floor_2" name="floor" placeholder="Этаж квартиры" class="form-control" value="${floor_data_2}">
-                </div>
-                <div class="col-sm-9">
-                    <input data-id="1" oninput="UpdateStorey(event);" type="text" id="id_floor_3" name="floor" placeholder="количество комнаты в квартире" class="form-control" value="${floor_data_3}">
-                </div>
-            </div>
-            <br>
-            <div style="width:75px; height:25px; float:right; display:flex; justify-content:right;">
-                <div id="storey_1">${floor_data_3 ? `${floor_data_3}/` : ' '}</div>
-                <div id="storey_2">${floor_data_2 ? `${floor_data_2}/` : ' '}</div>
-                <div id="storey_3">${floor_data_1 ? `${floor_data_1}/` : ' '}</div>
-            </div>
-            <br>
-        `;
-
-        // Bathroom
-        formHTML += `
-            <div class="form-group row">
-                <label for="id_bathroom" class="col-sm-3 col-form-label">Санузел</label>
-                <div class="col-sm-9">
-                    <select id="id_bathroom" name="bathroom" class="form-control" required>
-                        ${sanuzelOptions}
-                        <!-- Other options -->
                     </select>
                 </div>
             </div>
@@ -435,58 +482,6 @@
                 <label for="id_room_count" class="col-sm-3 col-form-label">Количество комнат</label>
                 <div class="col-sm-9">
                     <input type="number" id="id_room_count" name="room_count" class="form-control" value="${room_count}" required>
-                </div>
-            </div>
-            <br>
-        `;
-
-        // Construction Material
-        formHTML += `
-            <div class="form-group row">
-                <label for="id_construction_material" class="col-sm-3 col-form-label">Материал квартиры</label>
-                <div class="col-sm-9">
-                    <select id="id_construction_material" name="construction_material" class="form-control" required>
-                        ${materialOptions}
-                        <!-- Other options -->
-                    </select>
-                </div>
-            </div>
-            <br>
-        `;
-
-        // Kvartal
-        formHTML += `
-            <div class="form-group row">
-                <label for="id_kvartal" class="col-sm-3 col-form-label">Квартал</label>
-                <div class="col-sm-9">
-                    <select id="id_kvartal" name="kvartal" class="form-control" required>
-                        ${kvartalOptions}
-                    </select>
-                </div>
-            </div>
-            <br>
-        `;
-
-        // Landmark
-        formHTML += `
-            <div class="form-group row">
-                <label for="id_landmark" class="col-sm-3 col-form-label">Ориентир</label>
-                <div class="col-sm-9">
-                    <input type="text" id="id_landmark" name="landmark" class="form-control" value="${landmark}" required>
-                </div>
-            </div>
-            <br>
-        `;
-
-        // Room Layout
-        formHTML += `
-            <div class="form-group row">
-                <label for="id_room_layout" class="col-sm-3 col-form-label">Планировка</label>
-                <div class="col-sm-9">
-                    <select id="id_room_layout" name="room_layout" class="form-control" required>
-                        <!-- Other options -->
-                        ${roomStructureOptions}
-                    </select>
                 </div>
             </div>
             <br>
@@ -913,8 +908,6 @@
                 thumbnail:data.thumbnail,
             }
     };
-
-    
 
     const SelectChoice = (event)=>{
         const id = event.target ? event.target.dataset.id : null;
