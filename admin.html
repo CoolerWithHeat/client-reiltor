@@ -329,6 +329,18 @@
         `;
 
 
+        // Room Count
+        formHTML += `
+            <div class="form-group row">
+                <label for="id_room_count" class="col-sm-3 col-form-label">Количество комнат</label>
+                <div class="col-sm-9">
+                    <input type="number" id="id_room_count" name="room_count" class="form-control" value="${room_count}" required>
+                </div>
+            </div>
+            <br>
+        `;
+
+
         // Landmark
         formHTML += `
             <div class="form-group row">
@@ -471,17 +483,6 @@
                 <label for="id_kitchen_size" class="col-sm-3 col-form-label">Кухня м²</label>
                 <div class="col-sm-9">
                     <input type="text" id="id_kitchen_size" name="kitchen_size" class="form-control" value="${kitchen_size}">
-                </div>
-            </div>
-            <br>
-        `;
-
-        // Room Count
-        formHTML += `
-            <div class="form-group row">
-                <label for="id_room_count" class="col-sm-3 col-form-label">Количество комнат</label>
-                <div class="col-sm-9">
-                    <input type="number" id="id_room_count" name="room_count" class="form-control" value="${room_count}" required>
                 </div>
             </div>
             <br>
@@ -853,7 +854,6 @@
             WatchoutForFilterValues();
         }, 333);
     };
-
     
     function SaveAnnouncement() {
         const enteredData = RetrieveEnteredData();
@@ -867,7 +867,7 @@
                 formedData.append('images', image);
             });
             formedData.append('thumbnail', thumbnail);
-            formedData.append('id', onfocus);
+            if(onfocus){formedData.append('id', onfocus);}
             MakeRequest('createAnnouncement/', formedData, 'POST', (result) => {
                 if (result){
                     setTimeout(() => {
