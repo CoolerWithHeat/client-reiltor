@@ -403,6 +403,7 @@
             const images = {thumbnail:response.thumbnail, additional_image:response.images};
             const announcement_for = response.announcement_type;
             const material_used = response.construction_material;
+            
             PlaceAnnouncementDetails(price, landmark, announcement_for, location_kvartal, announcement_description, room_count, square_meters, kitchen, {current: floor, max: building_total_floor}, images, tashkent_regions, morgage_allowed, on_edge_apartment, material_used)
         };
 
