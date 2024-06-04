@@ -223,7 +223,7 @@
                 data.forEach(eachData=>{
                     const id = eachData.id;
                     const room_count = eachData.room_count;
-                    const floor = eachData.floor.apartment_room_count;
+                    const floor = eachData.floor.apartment_floor;
                     const building_total_floor = eachData.floor.building_total_floor;
                     const price = eachData.price;
                     const title = eachData.title;
@@ -236,6 +236,7 @@
                     const formedData = GenerateCard(id, tashkent_region, announcement_type, title, formatFloat(price), landmark, square_meters, room_count, {max:building_total_floor, current:floor}, location_kvartal, thumbnail);
                     product_window.innerHTML += formedData;
                 })
+                product_window.innerHTML += '<label></label>';
             }
         }
 
@@ -385,7 +386,7 @@
         const DealWithEach = (response)=>{
             const id = response.id;
             const room_count = response.room_count;
-            const floor = response.floor.apartment_room_count;
+            const floor = response.floor.apartment_floor;
             const building_total_floor = response.floor.building_total_floor;
             const price = response.price;
             const title = response.title;
